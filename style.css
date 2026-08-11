@@ -92,3 +92,74 @@ body {
   margin: 0 auto 1.5rem;
   color: #555;
 }
+
+.carrusel-section {
+  padding: 3rem 2rem;
+  text-align: center;
+}
+
+.carrusel-titulo {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+}
+
+.carrusel__track {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding-bottom: 0.5rem;
+}
+
+.libro-card {
+  flex: 0 0 calc(20% - 1rem); 
+  scroll-snap-align: start;
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease;
+  text-align: left;
+}
+
+.libro-card:hover {
+  transform: translateY(-4px);
+}
+
+.libro-card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 0.8rem;
+}
+
+.libro-card__estrellas {
+  color: #f5b301;
+  font-size: 0.9rem;
+  margin-top: 0.4rem;
+}
+
+.carrusel__nav {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+.carrusel__dot:hover {
+  background: #6c4de6;
+}
+
+@media (max-width: 992px) {
+  .libro-card { flex: 0 0 calc(33.333% - 1rem); }
+}
+@media (max-width: 600px) {
+  .libro-card { flex: 0 0 calc(50% - 1rem); }
+}
+@media (max-width: 400px) {
+  .libro-card { flex: 0 0 100%; }
+}
