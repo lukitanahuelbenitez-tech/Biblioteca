@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Catálogo | EntreLibros</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- NAVBAR (igual que en index.html) -->
+  <header class="navbar">
+    <div class="navbar__container">
+      <a href="index.html" class="navbar__logo">Libro<span>Lab</span></a>
+      <nav class="navbar__nav">
+        <ul class="navbar__links">
+          <li><a href="index.html#inicio">Inicio</a></li>
+          <li><a href="catalogo.html">Catálogo</a></li>
+          <li><a href="index.html#recomendaciones">Recomendaciones</a></li>
+          <li><a href="index.html#autores">Autores</a></li>
+        </ul>
+        <button class="btn btn--outline">Iniciar sesión</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- CATÁLOGO -->
+  <section class="catalogo-section" id="catalogo">
+    <h2 class="carrusel-titulo">Catálogo</h2>
+
+    <div class="catalogo-grid">
+      <a href="#libro1" class="catalogo-card">
+        <img src="img/principito.jpg" alt="Portada de El Principito">
+        <div class="catalogo-card__info">
+          <h3>El Principito</h3>
+          <p>Antoine de Saint-Exupéry</p>
+          <p>Ficción · 1943</p>
+          <div class="catalogo-card__estrellas">★★★★★ (4.8)</div>
+        </div>
+      </a>
+      
+<a href="#libro2" class="catalogo-card">
+      <img src="img/cien-anos.jpg" alt="Portada de Cien años de soledad">
+      <div class="catalogo-card__info">
+        <h3>Cien años de soledad</h3>
+        <p>Gabriel García Márquez</p>
+        <p>Realismo mágico · 1967</p>
+        <div class="catalogo-card__estrellas">★★★★★ (4.7)</div>
+      </div>
+    </a>
+
+    <a href="#libro3" class="catalogo-card">
+      <img src="img/harry-potter.jpg" alt="Portada de Harry Potter y la piedra filosofal">
+      <div class="catalogo-card__info">
+        <h3>Harry Potter y la piedra filosofal</h3>
+        <p>J. K. Rowling</p>
+        <p>Fantasía · 1997</p>
+        <div class="catalogo-card__estrellas">★★★★★ (4.9)</div>
+      </div>
+    </a>
+
+    <a href="#libro4" class="catalogo-card">
+      <img src="img/1984.jpg" alt="Portada de 1984">
+      <div class="catalogo-card__info">
+        <h3>1984</h3>
+        <p>George Orwell</p>
+        <p>Distopía · 1949</p>
+        <div class="catalogo-card__estrellas">★★★★★ (4.6)</div>
+      </div>
+    </a>
+
+    <a href="#libro5" class="catalogo-card">
+      <img src="img/orgullo-prejuicio.jpg" alt="Portada de Orgullo y prejuicio">
+      <div class="catalogo-card__info">
+        <h3>Orgullo y prejuicio</h3>
+        <p>Jane Austen</p>
+        <p>Romance · 1813</p>
+        <div class="catalogo-card__estrellas">★★★★★ (4.7)</div>
+      </div>
+    </a>
+
+    <a href="#libro6" class="catalogo-card">
+      <img src="img/rayuela.jpg" alt="Portada de Rayuela">
+      <div class="catalogo-card__info">
+        <h3>Rayuela</h3>
+        <p>Julio Cortázar</p>
+        <p>Novela experimental · 1963</p>
+        <div class="catalogo-card__estrellas">★★★★★ (4.5)</div>
+      </div>
+    </a>
+
+    <a href="#libro7" class="catalogo-card">
+      <img src="img/casa-espiritus.jpg" alt="Portada de La casa de los espíritus">
+      <div class="catalogo-card__info">
+        <h3>La casa de los espíritus</h3>
+        <p>Isabel Allende</p>
+        <p>Realismo mágico · 1982</p>
+        <div class="catalogo-card__estrellas">★★★★★ (4.6)</div>
+      </div>
+    </a>
+
+    <a href="#libro8" class="catalogo-card">
+      <img src="img/ficciones.jpg" alt="Portada de Ficciones">
+      <div class="catalogo-card__info">
+        <h3>Ficciones</h3>
+        <p>Jorge Luis Borges</p>
+        <p>Cuento · 1944</p>
+        <div class="catalogo-card__estrellas">★★★★★ (4.8)</div>
+      </div>
+    </a>
+
+    <a href="#libro9" class="catalogo-card">
+      <img src="img/detectives-salvajes.jpg" alt="Portada de Los detectives salvajes">
+      <div class="catalogo-card__info">
+        <h3>Los detectives salvajes</h3>
+        <p>Roberto Bolaño</p>
+        <p>Ficción · 1998</p>
+        <div class="catalogo-card__estrellas">★★★★☆ (4.4)</div>
+      </div>
+    </a>
+
+    <a href="#libro10" class="catalogo-card">
+      <img src="img/el-tunel.jpg" alt="Portada de El túnel">
+      <div class="catalogo-card__info">
+        <h3>El túnel</h3>
+        <p>Ernesto Sabato</p>
+        <p>Novela psicológica · 1948</p>
+        <div class="catalogo-card__estrellas">★★★★★ (4.6)</div>
+      </div>
+    </a>
+
+    </div>
+  </section>
+
+  
+  <div class="modal-libro" id="libro1">
+    <a href="#" class="modal-libro__overlay" aria-label="Cerrar"></a>
+    <div class="modal-libro__content">
+      <a href="#" class="modal__close" aria-label="Cerrar">&times;</a>
+      <img src="img/principito.jpg" alt="Portada de El Principito">
+      <div class="modal__info">
+        <h3>El Principito</h3>
+        <p>Autor: Antoine de Saint-Exupéry</p>
+        <p>Género: Ficción · Año: 1943</p>
+        <div class="modal__estrellas">★★★★★ (4.8/5)</div>
+        <p class="modal__sinopsis">Un piloto perdido en el desierto conoce a un pequeño príncipe que viene de otro planeta...</p>
+        <p class="modal__dato">📚 Dato curioso: es el libro más traducido del mundo después de la Biblia, con más de 500 idiomas y dialectos.</p>
+      </div>
+    </div>
+  </div>
+  
+  
+
+</body>
+</html>
+
+</body>
+</html>
