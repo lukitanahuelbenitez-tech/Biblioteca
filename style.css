@@ -235,20 +235,7 @@ a {
   gap: 0.5rem;
   margin-top: 1.5rem;
 }
-
-.carrusel__dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--violet-dim);
-  transition: background 0.2s ease;
-}
-
-.carrusel__dot:hover {
-  background: var(--violet-soft);
-}
-
-/* ---------- Catálogo: grid de portadas, estilo Letterboxd ---------- */
+/* ---------- Catálogo: grid de portadas ---------- */
 
 .catalogo-grid {
   display: grid;
@@ -293,9 +280,6 @@ a {
   display: block;
 }
 
-/* Overlay con título: oculto por defecto (solo portada, como Letterboxd),
-   aparece con hover/focus en pantallas que soportan hover (desktop).
-   En touch queda oculto y se accede al detalle tocando la portada. */
 .catalogo-card__overlay {
   position: absolute;
   inset: 0;
