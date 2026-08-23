@@ -1,73 +1,69 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Biblioteca | EntreLibros</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Biblioteca | EntreLibros</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <link rel="stylesheet" href="style.css">
-
-    <header class="navbar">
-  <div class="navbar__container">
-    <a href="#" class="navbar__logo">Entre<span>Libros</span></a>
-    <nav class="navbar__nav">
-      <ul class="navbar__links">
-        <li><a href="#inicio">Inicio</a></li>
-       <li><a href="catalogo.html">Catálogo</a></li>
-        <li><a href="#recomendaciones">Recomendaciones</a></li>
-        <li><a href="#lista">Lista</a></li>
-      </ul>
-      <button class="btn btn--outline">Iniciar sesión</button>
-    </nav>
-  </div>
-</header>
-
-<section class="hero">
-  <h1>Encontrá tu próxima gran lectura</h1>
-  <p>Descubrí libros, leé reseñas de otros lectores y explorá recomendaciones.</p>
-  <a href="catalogo.html" class="btn btn--primary">Explorar catálogo</a>
-</section>
-
-<section class="carrusel-section">
-  <h2 class="carrusel-titulo">Libros destacados</h2>
-
-  <div class="carrusel">
-    <div class="carrusel__track">
-      <article class="libro-card">
-        <img src="img/el principito.png" alt="Portada de El Principito">
-      </article>
-
-      <article class="libro-card">
-        <img src="img/cienaños.png" alt="Portada de Cien años de soledad">
-      </article>
-
-      <article class="libro-card">
-        <img src="img/harrypotter.png" alt="Portada de Harry Potter y la piedra filosofal">
-      </article>
-
-      <article class="libro-card">
-        <img src="img/1984.png" alt="Portada de 1984">
-      </article>
-
-      <article class="libro-card">
-        <img src="img/orgulloyprejuicio.png" alt="Portada de Orgullo y prejuicio">
-      </article>
+  <header class="navbar">
+    <div class="navbar__container">
+      <a href="index.html" class="navbar__logo">Entre<span>Libros</span></a>
+      <nav class="navbar__nav">
+        <ul class="navbar__links">
+          <li><a href="#inicio">Inicio</a></li>
+          <li><a href="catalogo.html">Catálogo</a></li>
+          <li><a href="#recomendaciones">Recomendaciones</a></li>
+          <li><a href="#lista">Lista</a></li>
+        </ul>
+        <button class="btn btn--outline">Iniciar sesión</button>
+      </nav>
     </div>
-  </div>
-</section>
+  </header>
 
+  <section class="hero">
+    <h1>Encontrá tu <span>próxima</span> gran lectura</h1>
+    <p>Descubrí libros, leé reseñas de otros lectores y explorá recomendaciones.</p>
+    <a href="catalogo.html" class="btn btn--primary">Explorar catálogo</a>
+  </section>
+
+  <section class="carrusel-section">
+    <h2 class="carrusel-titulo">Libros destacados</h2>
+
+    <div class="carrusel">
+      <div class="carrusel__track">
+        <article class="libro-card">
+          <img src="img/el principito.png" alt="Portada de El Principito">
+        </article>
+
+        <article class="libro-card">
+          <img src="img/cienaños.png" alt="Portada de Cien años de soledad">
+        </article>
+
+        <article class="libro-card">
+          <img src="img/harrypotter.png" alt="Portada de Harry Potter y la piedra filosofal">
+        </article>
+
+        <article class="libro-card">
+          <img src="img/1984.png" alt="Portada de 1984">
+        </article>
+
+        <article class="libro-card">
+          <img src="img/orgulloyprejuicio.png" alt="Portada de Orgullo y prejuicio">
+        </article>
+      </div>
+    </div>
 
     <div class="carrusel__nav">
-      <a href="#libro1" class="carrusel__dot"></a>
-      <a href="#libro2" class="carrusel__dot"></a>
-      <a href="#libro3" class="carrusel__dot"></a>
-      <a href="#libro4" class="carrusel__dot"></a>
-      <a href="#libro5" class="carrusel__dot"></a>
+      <a href="#libro1" class="carrusel__dot" aria-label="Ir a El Principito"></a>
+      <a href="#libro2" class="carrusel__dot" aria-label="Ir a Cien años de soledad"></a>
+      <a href="#libro3" class="carrusel__dot" aria-label="Ir a Harry Potter"></a>
+      <a href="#libro4" class="carrusel__dot" aria-label="Ir a 1984"></a>
+      <a href="#libro5" class="carrusel__dot" aria-label="Ir a Orgullo y prejuicio"></a>
     </div>
-  </div>
-</section>
+  </section>
 
 </body>
 </html>

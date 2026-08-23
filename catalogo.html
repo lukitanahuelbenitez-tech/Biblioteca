@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -14,7 +14,7 @@
       <nav class="navbar__nav">
         <ul class="navbar__links">
           <li><a href="index.html#inicio">Inicio</a></li>
-          <li><a href="catalogo.html">Catálogo</a></li>
+          <li><a href="catalogo.html" class="is-active">Catálogo</a></li>
           <li><a href="index.html#recomendaciones">Recomendaciones</a></li>
           <li><a href="index.html#lista">Lista</a></li>
         </ul>
@@ -23,117 +23,94 @@
     </div>
   </header>
 
-
-
- 
+  <!-- CATÁLOGO -->
   <section class="catalogo-section" id="catalogo">
     <h2 class="carrusel-titulo">Catálogo</h2>
 
     <div class="catalogo-grid">
       <a href="#libro1" class="catalogo-card">
         <img src="img/el principito.png" alt="Portada de El Principito">
-        <div class="catalogo-card__info">
+        <div class="catalogo-card__overlay">
           <h3>El Principito</h3>
-          <p>Antoine de Saint-Exupéry</p>
-          <p>Ficción · 1943</p>
-          <div class="catalogo-card__estrellas">★★★★★ (4.8)</div>
+          <div class="catalogo-card__estrellas">★ 4.8</div>
         </div>
       </a>
-      
-<a href="#libro2" class="catalogo-card">
-      <img src="img/cienaños.png" alt="Portada de Cien años de soledad">
-      <div class="catalogo-card__info">
-        <h3>Cien años de soledad</h3>
-        <p>Gabriel García Márquez</p>
-        <p>Realismo mágico · 1967</p>
-        <div class="catalogo-card__estrellas">★★★★★ (4.7)</div>
-      </div>
-    </a>
 
-    <a href="#libro3" class="catalogo-card">
-      <img src="img/harrypotter.png" alt="Portada de Harry Potter y la piedra filosofal">
-      <div class="catalogo-card__info">
-        <h3>Harry Potter y la piedra filosofal</h3>
-        <p>J. K. Rowling</p>
-        <p>Fantasía · 1997</p>
-        <div class="catalogo-card__estrellas">★★★★★ (4.9)</div>
-      </div>
-    </a>
+      <a href="#libro2" class="catalogo-card">
+        <img src="img/cienaños.png" alt="Portada de Cien años de soledad">
+        <div class="catalogo-card__overlay">
+          <h3>Cien años de soledad</h3>
+          <div class="catalogo-card__estrellas">★ 4.7</div>
+        </div>
+      </a>
 
-    <a href="#libro4" class="catalogo-card">
-      <img src="img/1984.png" alt="Portada de 1984">
-      <div class="catalogo-card__info">
-        <h3>1984</h3>
-        <p>George Orwell</p>
-        <p>Distopía · 1949</p>
-        <div class="catalogo-card__estrellas">★★★★★ (4.6)</div>
-      </div>
-    </a>
+      <a href="#libro3" class="catalogo-card">
+        <img src="img/harrypotter.png" alt="Portada de Harry Potter y la piedra filosofal">
+        <div class="catalogo-card__overlay">
+          <h3>Harry Potter y la piedra filosofal</h3>
+          <div class="catalogo-card__estrellas">★ 4.9</div>
+        </div>
+      </a>
 
-    <a href="#libro5" class="catalogo-card">
-      <img src="img/orgulloyprejuicio.png" alt="Portada de Orgullo y prejuicio">
-      <div class="catalogo-card__info">
-        <h3>Orgullo y prejuicio</h3>
-        <p>Jane Austen</p>
-        <p>Romance · 1813</p>
-        <div class="catalogo-card__estrellas">★★★★★ (4.7)</div>
-      </div>
-    </a>
+      <a href="#libro4" class="catalogo-card">
+        <img src="img/1984.png" alt="Portada de 1984">
+        <div class="catalogo-card__overlay">
+          <h3>1984</h3>
+          <div class="catalogo-card__estrellas">★ 4.6</div>
+        </div>
+      </a>
 
-    <a href="#libro6" class="catalogo-card">
-      <img src="img/rayuela.png" alt="Portada de Rayuela">
-      <div class="catalogo-card__info">
-        <h3>Rayuela</h3>
-        <p>Julio Cortázar</p>
-        <p>Novela experimental · 1963</p>
-        <div class="catalogo-card__estrellas">★★★★★ (4.5)</div>
-      </div>
-    </a>
+      <a href="#libro5" class="catalogo-card">
+        <img src="img/orgulloyprejuicio.png" alt="Portada de Orgullo y prejuicio">
+        <div class="catalogo-card__overlay">
+          <h3>Orgullo y prejuicio</h3>
+          <div class="catalogo-card__estrellas">★ 4.7</div>
+        </div>
+      </a>
 
-    <a href="#libro7" class="catalogo-card">
-      <img src="img/lacasaespiritus.png" alt="Portada de La casa de los espíritus">
-      <div class="catalogo-card__info">
-        <h3>La casa de los espíritus</h3>
-        <p>Isabel Allende</p>
-        <p>Realismo mágico · 1982</p>
-        <div class="catalogo-card__estrellas">★★★★★ (4.6)</div>
-      </div>
-    </a>
+      <a href="#libro6" class="catalogo-card">
+        <img src="img/rayuela.png" alt="Portada de Rayuela">
+        <div class="catalogo-card__overlay">
+          <h3>Rayuela</h3>
+          <div class="catalogo-card__estrellas">★ 4.5</div>
+        </div>
+      </a>
 
-    <a href="#libro8" class="catalogo-card">
-      <img src="img/ficciones.png" alt="Portada de Ficciones">
-      <div class="catalogo-card__info">
-        <h3>Ficciones</h3>
-        <p>Jorge Luis Borges</p>
-        <p>Cuento · 1944</p>
-        <div class="catalogo-card__estrellas">★★★★★ (4.8)</div>
-      </div>
-    </a>
+      <a href="#libro7" class="catalogo-card">
+        <img src="img/lacasaespiritus.png" alt="Portada de La casa de los espíritus">
+        <div class="catalogo-card__overlay">
+          <h3>La casa de los espíritus</h3>
+          <div class="catalogo-card__estrellas">★ 4.6</div>
+        </div>
+      </a>
 
-    <a href="#libro9" class="catalogo-card">
-      <img src="img/losdetectivessalvajes.png" alt="Portada de Los detectives salvajes">
-      <div class="catalogo-card__info">
-        <h3>Los detectives salvajes</h3>
-        <p>Roberto Bolaño</p>
-        <p>Ficción · 1998</p>
-        <div class="catalogo-card__estrellas">★★★★☆ (4.4)</div>
-      </div>
-    </a>
+      <a href="#libro8" class="catalogo-card">
+        <img src="img/ficciones.png" alt="Portada de Ficciones">
+        <div class="catalogo-card__overlay">
+          <h3>Ficciones</h3>
+          <div class="catalogo-card__estrellas">★ 4.8</div>
+        </div>
+      </a>
 
-    <a href="#libro10" class="catalogo-card">
-      <img src="img/eltunel.png" alt="Portada de El túnel">
-      <div class="catalogo-card__info">
-        <h3>El túnel</h3>
-        <p>Ernesto Sabato</p>
-        <p>Novela psicológica · 1948</p>
-        <div class="catalogo-card__estrellas">★★★★★ (4.6)</div>
-      </div>
-    </a>
+      <a href="#libro9" class="catalogo-card">
+        <img src="img/losdetectivessalvajes.png" alt="Portada de Los detectives salvajes">
+        <div class="catalogo-card__overlay">
+          <h3>Los detectives salvajes</h3>
+          <div class="catalogo-card__estrellas">★ 4.4</div>
+        </div>
+      </a>
 
+      <a href="#libro10" class="catalogo-card">
+        <img src="img/eltunel.png" alt="Portada de El túnel">
+        <div class="catalogo-card__overlay">
+          <h3>El túnel</h3>
+          <div class="catalogo-card__estrellas">★ 4.6</div>
+        </div>
+      </a>
     </div>
   </section>
 
-  
+  <!-- FICHAS MODALES -->
   <div class="modal-libro" id="libro1">
     <a href="#" class="modal-libro__overlay" aria-label="Cerrar"></a>
     <div class="modal-libro__content">
@@ -149,153 +126,150 @@
       </div>
     </div>
   </div>
-  
-<div class="modal-libro" id="libro2">
-  <a href="#" class="modal-libro__overlay" aria-label="Cerrar"></a>
-  <div class="modal-libro__content">
-    <a href="#" class="modal__close" aria-label="Cerrar">&times;</a>
-    <img src="img/cienaños.png" alt="Portada de Cien años de soledad">
-    <div class="modal__info">
-      <h3>Cien años de soledad</h3>
-      <p>Autor: Gabriel García Márquez</p>
-      <p>Género: Realismo mágico · Año: 1967</p>
-      <div class="modal__estrellas">★★★★★ (4.7/5)</div>
-      <p class="modal__sinopsis">La historia de la familia Buendía a lo largo de generaciones en el pueblo ficticio de Macondo, entre el mito, la memoria y el destino.</p>
-      <p class="modal__dato">Dato curioso: García Márquez tardó 18 meses escribiéndolo y su familia tuvo que empeñar objetos de la casa para sobrevivir mientras lo terminaba.</p>
+
+  <div class="modal-libro" id="libro2">
+    <a href="#" class="modal-libro__overlay" aria-label="Cerrar"></a>
+    <div class="modal-libro__content">
+      <a href="#" class="modal__close" aria-label="Cerrar">&times;</a>
+      <img src="img/cienaños.png" alt="Portada de Cien años de soledad">
+      <div class="modal__info">
+        <h3>Cien años de soledad</h3>
+        <p>Autor: Gabriel García Márquez</p>
+        <p>Género: Realismo mágico · Año: 1967</p>
+        <div class="modal__estrellas">★★★★★ (4.7/5)</div>
+        <p class="modal__sinopsis">La historia de la familia Buendía a lo largo de generaciones en el pueblo ficticio de Macondo, entre el mito, la memoria y el destino.</p>
+        <p class="modal__dato">Dato curioso: García Márquez tardó 18 meses escribiéndolo y su familia tuvo que empeñar objetos de la casa para sobrevivir mientras lo terminaba.</p>
+      </div>
     </div>
   </div>
-</div>
 
-<div class="modal-libro" id="libro3">
-  <a href="#" class="modal-libro__overlay" aria-label="Cerrar"></a>
-  <div class="modal-libro__content">
-    <a href="#" class="modal__close" aria-label="Cerrar">&times;</a>
-    <img src="img/harrypotter.png" alt="Portada de Harry Potter y la piedra filosofal">
-    <div class="modal__info">
-      <h3>Harry Potter y la piedra filosofal</h3>
-      <p>Autor: J. K. Rowling</p>
-      <p>Género: Fantasía · Año: 1997</p>
-      <div class="modal__estrellas">★★★★★ (4.9/5)</div>
-      <p class="modal__sinopsis">Un niño descubre que es mago y comienza su formación en Hogwarts, donde enfrenta el primer misterio que lo conecta con su pasado.</p>
-      <p class="modal__dato">Dato curioso: J. K. Rowling fue rechazada por 12 editoriales antes de que Bloomsbury aceptara publicarlo.</p>
+  <div class="modal-libro" id="libro3">
+    <a href="#" class="modal-libro__overlay" aria-label="Cerrar"></a>
+    <div class="modal-libro__content">
+      <a href="#" class="modal__close" aria-label="Cerrar">&times;</a>
+      <img src="img/harrypotter.png" alt="Portada de Harry Potter y la piedra filosofal">
+      <div class="modal__info">
+        <h3>Harry Potter y la piedra filosofal</h3>
+        <p>Autor: J. K. Rowling</p>
+        <p>Género: Fantasía · Año: 1997</p>
+        <div class="modal__estrellas">★★★★★ (4.9/5)</div>
+        <p class="modal__sinopsis">Un niño descubre que es mago y comienza su formación en Hogwarts, donde enfrenta el primer misterio que lo conecta con su pasado.</p>
+        <p class="modal__dato">Dato curioso: J. K. Rowling fue rechazada por 12 editoriales antes de que Bloomsbury aceptara publicarlo.</p>
+      </div>
     </div>
   </div>
-</div>
 
-<div class="modal-libro" id="libro4">
-  <a href="#" class="modal-libro__overlay" aria-label="Cerrar"></a>
-  <div class="modal-libro__content">
-    <a href="#" class="modal__close" aria-label="Cerrar">&times;</a>
-    <img src="img/1984.png" alt="Portada de 1984">
-    <div class="modal__info">
-      <h3>1984</h3>
-      <p>Autor: George Orwell</p>
-      <p>Género: Distopía · Año: 1949</p>
-      <div class="modal__estrellas">★★★★★ (4.6/5)</div>
-      <p class="modal__sinopsis">En una sociedad vigilada por el Gran Hermano, un hombre empieza a cuestionar el régimen que controla hasta sus propios pensamientos.</p>
-      <p class="modal__dato">Dato curioso: el término "Gran Hermano" se volvió tan popular que hoy se usa en todo el mundo para hablar de vigilancia estatal.</p>
+  <div class="modal-libro" id="libro4">
+    <a href="#" class="modal-libro__overlay" aria-label="Cerrar"></a>
+    <div class="modal-libro__content">
+      <a href="#" class="modal__close" aria-label="Cerrar">&times;</a>
+      <img src="img/1984.png" alt="Portada de 1984">
+      <div class="modal__info">
+        <h3>1984</h3>
+        <p>Autor: George Orwell</p>
+        <p>Género: Distopía · Año: 1949</p>
+        <div class="modal__estrellas">★★★★★ (4.6/5)</div>
+        <p class="modal__sinopsis">En una sociedad vigilada por el Gran Hermano, un hombre empieza a cuestionar el régimen que controla hasta sus propios pensamientos.</p>
+        <p class="modal__dato">Dato curioso: el término "Gran Hermano" se volvió tan popular que hoy se usa en todo el mundo para hablar de vigilancia estatal.</p>
+      </div>
     </div>
   </div>
-</div>
 
-<div class="modal-libro" id="libro5">
-  <a href="#" class="modal-libro__overlay" aria-label="Cerrar"></a>
-  <div class="modal-libro__content">
-    <a href="#" class="modal__close" aria-label="Cerrar">&times;</a>
-    <img src="img/orgulloyprejuicio.png" alt="Portada de Orgullo y prejuicio">
-    <div class="modal__info">
-      <h3>Orgullo y prejuicio</h3>
-      <p>Autor: Jane Austen</p>
-      <p>Género: Romance · Año: 1813</p>
-      <div class="modal__estrellas">★★★★★ (4.7/5)</div>
-      <p class="modal__sinopsis">Elizabeth Bennet y el orgulloso Sr. Darcy protagonizan una historia sobre prejuicios, clase social y el verdadero significado del amor.</p>
-      <p class="modal__dato">Dato curioso: Jane Austen lo publicó de forma anónima; en la portada original solo decía "By a Lady".</p>
+  <div class="modal-libro" id="libro5">
+    <a href="#" class="modal-libro__overlay" aria-label="Cerrar"></a>
+    <div class="modal-libro__content">
+      <a href="#" class="modal__close" aria-label="Cerrar">&times;</a>
+      <img src="img/orgulloyprejuicio.png" alt="Portada de Orgullo y prejuicio">
+      <div class="modal__info">
+        <h3>Orgullo y prejuicio</h3>
+        <p>Autor: Jane Austen</p>
+        <p>Género: Romance · Año: 1813</p>
+        <div class="modal__estrellas">★★★★★ (4.7/5)</div>
+        <p class="modal__sinopsis">Elizabeth Bennet y el orgulloso Sr. Darcy protagonizan una historia sobre prejuicios, clase social y el verdadero significado del amor.</p>
+        <p class="modal__dato">Dato curioso: Jane Austen lo publicó de forma anónima; en la portada original solo decía "By a Lady".</p>
+      </div>
     </div>
   </div>
-</div>
 
-<div class="modal-libro" id="libro6">
-  <a href="#" class="modal-libro__overlay" aria-label="Cerrar"></a>
-  <div class="modal-libro__content">
-    <a href="#" class="modal__close" aria-label="Cerrar">&times;</a>
-    <img src="img/rayuela.png" alt="Portada de Rayuela">
-    <div class="modal__info">
-      <h3>Rayuela</h3>
-      <p>Autor: Julio Cortázar</p>
-      <p>Género: Novela experimental · Año: 1963</p>
-      <div class="modal__estrellas">★★★★★ (4.5/5)</div>
-      <p class="modal__sinopsis">La historia de Horacio Oliveira, un argentino en París que busca sentido a su existencia, contada en capítulos que pueden leerse en distinto orden.</p>
-      <p class="modal__dato">Dato curioso: puede leerse en orden lineal o siguiendo un "tablero de dirección" alternativo que el propio Cortázar diseñó.</p>
+  <div class="modal-libro" id="libro6">
+    <a href="#" class="modal-libro__overlay" aria-label="Cerrar"></a>
+    <div class="modal-libro__content">
+      <a href="#" class="modal__close" aria-label="Cerrar">&times;</a>
+      <img src="img/rayuela.png" alt="Portada de Rayuela">
+      <div class="modal__info">
+        <h3>Rayuela</h3>
+        <p>Autor: Julio Cortázar</p>
+        <p>Género: Novela experimental · Año: 1963</p>
+        <div class="modal__estrellas">★★★★★ (4.5/5)</div>
+        <p class="modal__sinopsis">La historia de Horacio Oliveira, un argentino en París que busca sentido a su existencia, contada en capítulos que pueden leerse en distinto orden.</p>
+        <p class="modal__dato">Dato curioso: puede leerse en orden lineal o siguiendo un "tablero de dirección" alternativo que el propio Cortázar diseñó.</p>
+      </div>
     </div>
   </div>
-</div>
 
-<div class="modal-libro" id="libro7">
-  <a href="#" class="modal-libro__overlay" aria-label="Cerrar"></a>
-  <div class="modal-libro__content">
-    <a href="#" class="modal__close" aria-label="Cerrar">&times;</a>
-    <img src="img/lacasaespiritus.png" alt="Portada de La casa de los espíritus">
-    <div class="modal__info">
-      <h3>La casa de los espíritus</h3>
-      <p>Autor: Isabel Allende</p>
-      <p>Género: Realismo mágico · Año: 1982</p>
-      <div class="modal__estrellas">★★★★★ (4.6/5)</div>
-      <p class="modal__sinopsis">La saga de la familia Trueba a lo largo de varias generaciones, entre el amor, la política y lo sobrenatural en un país latinoamericano no nombrado.</p>
-      <p class="modal__dato">Dato curioso: nació como una carta que Isabel Allende le escribió a su abuelo moribundo.</p>
+  <div class="modal-libro" id="libro7">
+    <a href="#" class="modal-libro__overlay" aria-label="Cerrar"></a>
+    <div class="modal-libro__content">
+      <a href="#" class="modal__close" aria-label="Cerrar">&times;</a>
+      <img src="img/lacasaespiritus.png" alt="Portada de La casa de los espíritus">
+      <div class="modal__info">
+        <h3>La casa de los espíritus</h3>
+        <p>Autor: Isabel Allende</p>
+        <p>Género: Realismo mágico · Año: 1982</p>
+        <div class="modal__estrellas">★★★★★ (4.6/5)</div>
+        <p class="modal__sinopsis">La saga de la familia Trueba a lo largo de varias generaciones, entre el amor, la política y lo sobrenatural en un país latinoamericano no nombrado.</p>
+        <p class="modal__dato">Dato curioso: nació como una carta que Isabel Allende le escribió a su abuelo moribundo.</p>
+      </div>
     </div>
   </div>
-</div>
 
-<div class="modal-libro" id="libro8">
-  <a href="#" class="modal-libro__overlay" aria-label="Cerrar"></a>
-  <div class="modal-libro__content">
-    <a href="#" class="modal__close" aria-label="Cerrar">&times;</a>
-    <img src="img/ficciones.png" alt="Portada de Ficciones">
-    <div class="modal__info">
-      <h3>Ficciones</h3>
-      <p>Autor: Jorge Luis Borges</p>
-      <p>Género: Cuento · Año: 1944</p>
-      <div class="modal__estrellas">★★★★★ (4.8/5)</div>
-      <p class="modal__sinopsis">Una colección de cuentos que exploran laberintos, bibliotecas infinitas y realidades alternativas, considerada una obra clave de la literatura del siglo XX.</p>
-      <p class="modal__dato">Dato curioso: Borges nunca ganó el Premio Nobel de Literatura, pese a ser uno de los autores más citados como merecedor de él.</p>
+  <div class="modal-libro" id="libro8">
+    <a href="#" class="modal-libro__overlay" aria-label="Cerrar"></a>
+    <div class="modal-libro__content">
+      <a href="#" class="modal__close" aria-label="Cerrar">&times;</a>
+      <img src="img/ficciones.png" alt="Portada de Ficciones">
+      <div class="modal__info">
+        <h3>Ficciones</h3>
+        <p>Autor: Jorge Luis Borges</p>
+        <p>Género: Cuento · Año: 1944</p>
+        <div class="modal__estrellas">★★★★★ (4.8/5)</div>
+        <p class="modal__sinopsis">Una colección de cuentos que exploran laberintos, bibliotecas infinitas y realidades alternativas, considerada una obra clave de la literatura del siglo XX.</p>
+        <p class="modal__dato">Dato curioso: Borges nunca ganó el Premio Nobel de Literatura, pese a ser uno de los autores más citados como merecedor de él.</p>
+      </div>
     </div>
   </div>
-</div>
 
-<div class="modal-libro" id="libro9">
-  <a href="#" class="modal-libro__overlay" aria-label="Cerrar"></a>
-  <div class="modal-libro__content">
-    <a href="#" class="modal__close" aria-label="Cerrar">&times;</a>
-    <img src="img/losdetectivessalvajes.png" alt="Portada de Los detectives salvajes">
-    <div class="modal__info">
-      <h3>Los detectives salvajes</h3>
-      <p>Autor: Roberto Bolaño</p>
-      <p>Género: Ficción · Año: 1998</p>
-      <div class="modal__estrellas">★★★★☆ (4.4/5)</div>
-      <p class="modal__sinopsis">Dos poetas jóvenes emprenden la búsqueda de una escritora desaparecida, en un recorrido que atraviesa México y el mundo durante décadas.</p>
-      <p class="modal__dato">Dato curioso: ganó el Premio Rómulo Gallegos en 1999, uno de los más prestigiosos de la literatura en español.</p>
+  <div class="modal-libro" id="libro9">
+    <a href="#" class="modal-libro__overlay" aria-label="Cerrar"></a>
+    <div class="modal-libro__content">
+      <a href="#" class="modal__close" aria-label="Cerrar">&times;</a>
+      <img src="img/losdetectivessalvajes.png" alt="Portada de Los detectives salvajes">
+      <div class="modal__info">
+        <h3>Los detectives salvajes</h3>
+        <p>Autor: Roberto Bolaño</p>
+        <p>Género: Ficción · Año: 1998</p>
+        <div class="modal__estrellas">★★★★☆ (4.4/5)</div>
+        <p class="modal__sinopsis">Dos poetas jóvenes emprenden la búsqueda de una escritora desaparecida, en un recorrido que atraviesa México y el mundo durante décadas.</p>
+        <p class="modal__dato">Dato curioso: ganó el Premio Rómulo Gallegos en 1999, uno de los más prestigiosos de la literatura en español.</p>
+      </div>
     </div>
   </div>
-</div>
 
-<div class="modal-libro" id="libro10">
-  <a href="#" class="modal-libro__overlay" aria-label="Cerrar"></a>
-  <div class="modal-libro__content">
-    <a href="#" class="modal__close" aria-label="Cerrar">&times;</a>
-    <img src="img/eltunel.png" alt="Portada de El túnel">
-    <div class="modal__info">
-      <h3>El túnel</h3>
-      <p>Autor: Ernesto Sabato</p>
-      <p>Género: Novela psicológica · Año: 1948</p>
-      <div class="modal__estrellas">★★★★★ (4.6/5)</div>
-      <p class="modal__sinopsis">El pintor Juan Pablo Castel narra, desde la cárcel, la obsesión que lo llevó a matar a la única persona que sintió que lo entendía.</p>
-      <p class="modal__dato">Dato curioso: fue la primera novela de Sabato, escrita mientras trabajaba como físico, antes de dedicarse por completo a la literatura.</p>
+  <div class="modal-libro" id="libro10">
+    <a href="#" class="modal-libro__overlay" aria-label="Cerrar"></a>
+    <div class="modal-libro__content">
+      <a href="#" class="modal__close" aria-label="Cerrar">&times;</a>
+      <img src="img/eltunel.png" alt="Portada de El túnel">
+      <div class="modal__info">
+        <h3>El túnel</h3>
+        <p>Autor: Ernesto Sabato</p>
+        <p>Género: Novela psicológica · Año: 1948</p>
+        <div class="modal__estrellas">★★★★★ (4.6/5)</div>
+        <p class="modal__sinopsis">El pintor Juan Pablo Castel narra, desde la cárcel, la obsesión que lo llevó a matar a la única persona que sintió que lo entendía.</p>
+        <p class="modal__dato">Dato curioso: fue la primera novela de Sabato, escrita mientras trabajaba como físico, antes de dedicarse por completo a la literatura.</p>
+      </div>
     </div>
   </div>
-</div>
-
-</body>
-</html>
 
 </body>
 </html>
