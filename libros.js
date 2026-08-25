@@ -10,4 +10,6 @@ const libros = [
         portada: "img/el principito.png",
         sinopsis: "Un piloto perdido en el desierto conoce a un pequeño principe que viene de otro planeta..."
     },
+
+    
 ]
