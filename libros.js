@@ -71,8 +71,7 @@ const libros = [
         paginas: 248,
         rating: 3.8,
         portada: "img/viajenicnac.png",
-        sinopsis: "Orgullo y prejuicio es una novela de amor o, mejor, una novela de enamorados. Bingley y Jane, Darcy y Elisabeth, Lydia y Wickham luchan para obtener el objeto de su pasión, deben jugar el juego que la sociedad en que viven les propone y deben ganarlo. Sin saltarse las reglas, pero con un tesón capaz de vencer cualquier barrera, llegarán a toda costa a ese matrimonio que para ellos habrá de marcar el inicio de la felicidad soñada."
-    },
+        sinopsis: "Viaje maravilloso del señor Nic-Nac al planeta Marte, en el que se refieren las prodigiosas aventuras de este señor y se dan a conocer las instituciones, constumbres y preocupaciones de un mundo desconocido." 
 
 
 ]
