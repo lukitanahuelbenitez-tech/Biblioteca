@@ -18,9 +18,9 @@ const libros = [
         genero: "Ficción épica",
         anio: 1967,
         paginas: 747,
-        rating: 4.12,
+        rating: 4.1,
         portada: "img/cienaños.png",
-        sinopsis: "Narra la historia de siete generaciones de la familia Buendia en el publo ficticio de Macondo. La novela muestra el auge y la caida de la aldea y de su estirpe, marcados por la soledad, el incesto y las guerras y elementos de realismo mágico"
+        sinopsis: "Narra la historia de siete generaciones de la familia Buendia en el publo ficticio de Macondo. La novela muestra el auge y la caida de la aldea y de su estirpe, marcados por la soledad, el incesto y las guerras y elementos de realismo mágico."
     },
 
     {
