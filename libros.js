@@ -73,5 +73,5 @@ const libros = [
         portada: "img/viajenicnac.png",
         sinopsis: "Viaje maravilloso del señor Nic-Nac al planeta Marte, en el que se refieren las prodigiosas aventuras de este señor y se dan a conocer las instituciones, constumbres y preocupaciones de un mundo desconocido." 
 
-
+    },
 ]
