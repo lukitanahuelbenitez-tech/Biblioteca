@@ -8,7 +8,7 @@ const libros = [
         paginas: 96,
         rating: 4.8,
         portada: "img/el principito.png",
-        sinopsis: "Un piloto perdido en el desierto conoce a un pequeño principe que viene de otro planeta..."
+        sinopsis: "Un piloto varado en el desierto que conoce a un pequeño príncipe de otro planeta. El niño comparte las historias de sus viajes por distintos asteroides, enseñando valiosas lecciones sobre el amor, la amistad y la inocencia que los adultos olvidan."
     },
 
     
