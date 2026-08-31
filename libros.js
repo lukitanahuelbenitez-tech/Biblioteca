@@ -68,4 +68,16 @@ const libros = [
         sinopsis: "Viaje maravilloso del señor Nic-Nac al planeta Marte, en el que se refieren las prodigiosas aventuras de este señor y se dan a conocer las instituciones, constumbres y preocupaciones de un mundo desconocido." 
 
     },
+
+    {
+        id: 7,
+        titulo: "Boulevard",
+        autor: "Flor M. Salvador",
+        genero: "Romance",
+        anio: 2020,
+        paginas: 316,
+        portada: "img/boulevard.png",
+        sinopsis: "Luke y Hasley no eran el prototipo de una pareja perfecta. Sin embargo, ambos le pusieron una definición a lo que ellos crearon..." 
+
+    },
 ]
