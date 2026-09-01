@@ -80,4 +80,16 @@ const libros = [
         sinopsis: "Luke y Hasley no eran el prototipo de una pareja perfecta. Sin embargo, ambos le pusieron una definición a lo que ellos crearon..." 
 
     },
+
+
+ {
+        id: 8,
+        titulo: "Los ojos del perro siberiano",
+        autor: "Antonio Santa Ana",
+        genero: "Drama",
+        anio: 1998,
+        paginas: 135,
+        portada: "img/losojossiberiano.png",
+        sinopsis: "Narra la historia de un adolescente anónimo que busca reconstruir su vínculo con su hermano mayor, Ezequiel, quien fue expulsado de su hogar tras ser diagnosticado con SIDA"
+ }
 ]
