@@ -91,5 +91,16 @@ const libros = [
         paginas: 135,
         portada: "img/losojossiberiano.png",
         sinopsis: "Narra la historia de un adolescente anónimo que busca reconstruir su vínculo con su hermano mayor, Ezequiel, quien fue expulsado de su hogar tras ser diagnosticado con SIDA"
- }
+ },
+
+ {
+        id: 9,
+        titulo: "Cumbres Borrascosas",
+        autor: "Emily Brontë",
+        genero: "Romance",
+        anio: 1847,
+        paginas: 416,
+        portada: "img/cumbresborrascosas.png",
+        sinopsis: "Es una intensa historia sobre la obsesión, el rencor y una venganza que se prolonga durante dos generaciones en los sombríos parámos de Yorkshire"
+ },
 ]
