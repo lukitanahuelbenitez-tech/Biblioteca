@@ -25,6 +25,7 @@
   </section>
 
   <script src="libros.js"></script>
+  <script src="resenas.js"></script>
   <script>
     const grid = document.getElementById("catalogo-grid");
 
@@ -38,7 +39,7 @@
           <p class="catalogo-card__autor">${libro.autor}</p>
           <div class="catalogo-card__meta">
             <span class="catalogo-card__genero">${libro.genero}</span>
-            <span class="catalogo-card__estrellas">★ ${libro.rating}</span>
+            <span class="catalogo-card__estrellas">${calcularPromedio(libro.id) ? "★ " + calcularPromedio(libro.id) : "Sin calificar"}</span>
           </div>
         </div>
       </a>
