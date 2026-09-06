@@ -19,12 +19,23 @@ if (!libro) {
 function renderFicha() {
   const resenas = obtenerResenas(libro.id);
   const promedio = calcularPromedio(libro.id);
+  const distribucion = calcularDistribucion(libro.id);
+  const maxConteo = Math.max(1, ...distribucion.map(d => d.conteo));
+  const usuarioActual = obtenerUsuarioActual();
 
   const estrellasLlenas = promedio ? Math.round(promedio) : 0;
   const estrellas = "★".repeat(estrellasLlenas) + "☆".repeat(5 - estrellasLlenas);
   const textoRating = promedio
     ? `${estrellas} <span>(${promedio}/5 · ${resenas.length} reseña${resenas.length === 1 ? "" : "s"})</span>`
     : `<span class="ficha-hero__sin-resenas">Sin calificaciones todavía</span>`;
+
+  const barrasHTML = distribucion.map(({ valor, conteo }) => `
+    <div class="distribucion__barra-wrap" title="${valor} ★ · ${conteo}">
+      <div class="distribucion__barra" style="height: ${(conteo / maxConteo) * 100}%"></div>
+    </div>
+  `).join("");
+
+  const etiquetasHTML = distribucion.map(({ valor }) => `<span>${valor}</span>`).join("");
 
   const listaResenas = resenas.length === 0
     ? `<p class="resenas__vacio">Todavía no hay reseñas. ¡Sé el primero en dejar una!</p>`
@@ -38,6 +49,29 @@ function renderFicha() {
           <span class="resena__fecha">${r.fecha}</span>
         </div>
       `).join("");
+
+  const formularioHTML = usuarioActual
+    ? `
+      <p class="form-resena__usuario">Publicando como <strong>${usuarioActual}</strong></p>
+      <form id="form-resena" class="form-resena">
+        <div class="rating-picker" id="rating-picker">
+          <div class="rating-picker__vacias">☆☆☆☆☆</div>
+          <div class="rating-picker__llenas" id="rating-llenas">★★★★★</div>
+          <div class="rating-picker__click-zonas">
+            ${[0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5].map(v =>
+              `<button type="button" class="rating-picker__zona" data-valor="${v}"></button>`
+            ).join("")}
+          </div>
+        </div>
+        <input type="hidden" id="input-puntuacion" required>
+        <textarea id="input-comentario" placeholder="¿Qué te pareció?" required></textarea>
+        <button type="submit" class="btn btn--primary">Publicar reseña</button>
+      </form>
+    `
+    : `
+      <p class="form-resena__usuario">Iniciá sesión para dejar tu reseña.</p>
+      <button type="button" class="btn btn--primary" id="btn-login-resena">Iniciar sesión</button>
+    `;
 
   root.innerHTML = `
     <section class="ficha-hero" style="--backdrop: url('${libro.portada}')">
@@ -62,36 +96,68 @@ function renderFicha() {
         <h2>Sinopsis</h2>
         <p>${libro.sinopsis}</p>
 
+        <h2 class="resenas__titulo">Distribución de calificaciones</h2>
+        <div class="distribucion">${barrasHTML}</div>
+        <div class="distribucion__etiquetas">${etiquetasHTML}</div>
+
         <h2 class="resenas__titulo">Reseñas</h2>
         <div class="resenas__lista">${listaResenas}</div>
       </div>
 
       <aside class="ficha-cuerpo__dato">
         <h3>Dejá tu reseña</h3>
-        <form id="form-resena" class="form-resena">
-          <input type="text" id="input-usuario" placeholder="Tu nombre" required>
-          <select id="input-puntuacion" required>
-            <option value="">Puntuación</option>
-            <option value="5">★★★★★ (5)</option>
-            <option value="4">★★★★ (4)</option>
-            <option value="3">★★★ (3)</option>
-            <option value="2">★★ (2)</option>
-            <option value="1">★ (1)</option>
-          </select>
-          <textarea id="input-comentario" placeholder="¿Qué te pareció?" required></textarea>
-          <button type="submit" class="btn btn--primary">Publicar reseña</button>
-        </form>
+        ${formularioHTML}
       </aside>
     </section>
   `;
 
-  document.getElementById("form-resena").addEventListener("submit", (e) => {
-    e.preventDefault();
-    const usuario = document.getElementById("input-usuario").value.trim();
-    const puntuacion = document.getElementById("input-puntuacion").value;
-    const comentario = document.getElementById("input-comentario").value.trim();
+  if (usuarioActual) {
+    inicializarRatingPicker();
 
-    guardarResena(libro.id, usuario, puntuacion, comentario);
-    renderFicha(); // vuelve a dibujar la ficha con la reseña nueva ya incluida
+    document.getElementById("form-resena").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const puntuacion = document.getElementById("input-puntuacion").value;
+      const comentario = document.getElementById("input-comentario").value.trim();
+
+      if (!puntuacion) {
+        alert("Elegí una puntuación haciendo click en las estrellas.");
+        return;
+      }
+
+      guardarResena(libro.id, usuarioActual, puntuacion, comentario);
+      renderFicha();
+    });
+  } else {
+    document.getElementById("btn-login-resena").addEventListener("click", () => {
+      const nombre = prompt("¿Cómo te llamás?");
+      if (nombre && nombre.trim()) {
+        iniciarSesion(nombre);
+        renderFicha();
+        actualizarBotonSesion();
+      }
+    });
+  }
+}
+
+function inicializarRatingPicker() {
+  const zonas = document.querySelectorAll(".rating-picker__zona");
+  const llenas = document.getElementById("rating-llenas");
+  const inputPuntuacion = document.getElementById("input-puntuacion");
+
+  function pintar(valor) {
+    llenas.style.width = (valor / 5 * 100) + "%";
+  }
+
+  zonas.forEach(zona => {
+    const valor = Number(zona.dataset.valor);
+    zona.addEventListener("mouseenter", () => pintar(valor));
+    zona.addEventListener("click", () => {
+      inputPuntuacion.value = valor;
+      pintar(valor);
+    });
+  });
+
+  document.getElementById("rating-picker").addEventListener("mouseleave", () => {
+    pintar(Number(inputPuntuacion.value) || 0);
   });
 }
