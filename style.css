@@ -570,8 +570,9 @@ a {
     font-size: 0.78rem;
     white-space: nowrap;
   }
+}
 
-  /* ---------- Barra de navegación inferior (tabbar) ---------- */
+/* ---------- Barra de navegación inferior (tabbar) ---------- */
 
 .tabbar {
   position: fixed;
@@ -611,5 +612,4 @@ a {
 /* Deja espacio abajo para que la tabbar no tape contenido */
 body {
   padding-bottom: 4.2rem;
-}
 }
