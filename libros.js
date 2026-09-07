@@ -7,7 +7,7 @@ const libros = [
         anio: 1943,
         paginas: 96,
         portada: "img/el principito.png",
-        sinopsis: "Un piloto varado en el desierto conoce a un pequeño principe que viene de otro planeta. El niño comparte las historias de sus viajes por distintos asteoroides, enseñando valiosas lecciones sobre el amor, la amistad y la inocencia que los adultos olvidan"
+        sinopsis: "Después de quedar varado en un desierto tras un accidente, un piloto entra en contacto con un cautivador principito que le relata su viaje de planeta en planeta y su búsqueda de lo más importante en la vida."
     },
 
     {

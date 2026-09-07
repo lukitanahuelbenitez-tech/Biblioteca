@@ -95,7 +95,6 @@ function renderFicha() {
       <div class="ficha-cuerpo__col">
         <h2>Sinopsis</h2>
         <p>${libro.sinopsis}</p>
-
         <h2 class="resenas__titulo">Distribución de calificaciones</h2>
         <div class="distribucion">${barrasHTML}</div>
         <div class="distribucion__etiquetas">${etiquetasHTML}</div>
