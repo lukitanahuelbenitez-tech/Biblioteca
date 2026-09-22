@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crear cuenta | EntreLibros</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="navbar__container">
+      <a href="index.html" class="navbar__logo">Entre<span>Libros</span></a>
+    </div>
+  </header>
+
+  <section class="auth">
+    <h1>Crear cuenta</h1>
+    <form action="registro.php" method="POST" class="form-auth">
+      <input type="text" name="nombre" placeholder="Tu nombre" required>
+      <input type="email" name="email" placeholder="Email" required>
+      <input type="password" name="contrasena" placeholder="Contraseña" required minlength="4">
+      <button type="submit" class="btn btn--primary">Registrarme</button>
+    </form>
+    <p class="auth__alt">¿Ya tenés cuenta? <a href="login.html">Iniciá sesión</a></p>
+  </section>
+
+</body>
+</html>
