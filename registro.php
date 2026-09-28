@@ -2,7 +2,7 @@
 session_start();
 require "conexion.php";
 
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nombre = trim($_POST["nombre"]);
     $email = trim($_POST["email"]);
     $contrasena = $_POST["contrasena"];
