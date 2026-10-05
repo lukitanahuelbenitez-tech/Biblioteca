@@ -704,3 +704,46 @@ body {
   color: var(--text-muted);
   margin-bottom: 0.8rem;
 }
+
+
+
+.perfil-seccion {
+  padding: 16px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.perfil-favoritos {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.libro-fav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.libro-fav-portada {
+  aspect-ratio: 2 / 3;
+  background: #6d28d9;
+  border-radius: 6px;
+}
+
+.resena-item {
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.resena-puntaje {
+  color: #f5c518;
+}
+
+@media (max-width: 600px) {
+  .perfil-favoritos {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
