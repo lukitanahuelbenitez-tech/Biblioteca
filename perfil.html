@@ -4,8 +4,66 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfil | EntreLibros</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    
+    <header class="navbar">
+  <div class="navbar__container">
+    <a href="index.html" class="navbar__logo">Entre<span>Libros</span></a>
+    <button class="btn btn--outline" id="btn-sesion">Iniciar sesión</button>
+  </div>
+</header>
+
+  <main>
+    <section class="perfil-cabecera">
+      <div class="perfil-avatar">?</div>
+      <h1 class="perfil-nombre" id="perfil-nombre">Nombre de usuario</h1>
+      <div class="perfil-stats">
+        <div class="perfil-stat">
+          <strong id="stat-resenas">0</strong>
+          <span>Reseñas</span>
+        </div>
+        <div class="perfil-stat">
+          <strong id="stat-favoritos">0</strong>
+          <span>Favoritos</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="perfil-seccion">
+      <h2>Mis favoritos</h2>
+      <div class="perfil-favoritos" id="perfil-favoritos">
+        <div class="libro-fav">
+          <div class="libro-fav-portada"></div>
+          <span>Título del libro</span>
+        </div>
+        <div class="libro-fav">
+          <div class="libro-fav-portada"></div>
+          <span>Título del libro</span>
+        </div>
+        <div class="libro-fav">
+          <div class="libro-fav-portada"></div>
+          <span>Título del libro</span>
+        </div>
+        <div class="libro-fav">
+          <div class="libro-fav-portada"></div>
+          <span>Título del libro</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="perfil-seccion">
+      <h2>Últimas reseñas</h2>
+      <div id="perfil-resenas">
+        <article class="resena-item">
+          <h3>Título del libro</h3>
+          <p class="resena-puntaje">★★★★☆</p>
+          <p>Texto de ejemplo de la reseña.</p>
+        </article>
+        <article class="resena-item">
+          <h3>Otro libro</h3>
+          <p class="resena-puntaje">★★★☆☆</p>
+          <p>Otro texto de e
+
 </body>
 </html>
