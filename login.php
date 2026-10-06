@@ -15,7 +15,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if ($usuario && password_verify($contrasena, $usuario["contrasena"])) {
         $_SESSION["usuario_id"] = $usuario["id"];
         $_SESSION["usuario_nombre"] = $usuario["nombre"];
-        header("Location: catalogo.html");
+
+        $nombre_js = json_encode($usuario["nombre"], JSON_HEX_TAG | JSON_HEX_AMP);
+        echo "<!DOCTYPE html><meta charset='utf-8'><script>"
+           . "localStorage.setItem('usuarioActual', $nombre_js);"
+           . "location.href = 'catalogo.html';"
+           . "</script>";
         exit;
     } else {
         die("Email o contraseña incorrectos.");
