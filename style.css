@@ -755,3 +755,144 @@ body {
 h1, h2, h3 {
   font-family: 'Playfair Display', serif;
 }
+
+
+
+/* ---------- Perfil estilo Letterboxd ---------- */
+
+.perfil-cabecera {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 2rem 1rem 1rem;
+}
+
+.perfil-avatar {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  background: var(--violet-dim);
+  border: 2px solid var(--violet);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 2.2rem;
+}
+
+.perfil-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 1.4rem;
+  border-bottom: 1px solid var(--border);
+  margin-top: 1rem;
+  overflow-x: auto;
+}
+
+.perfil-tab {
+  padding: 0.8rem 0.2rem;
+  text-decoration: none;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+}
+
+.perfil-tab.is-active {
+  color: var(--text);
+  border-bottom-color: var(--violet);
+}
+
+.perfil-panel { display: none; }
+.perfil-panel.is-active { display: block; }
+
+.perfil-seccion h2 {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.4rem;
+  margin-bottom: 0.8rem;
+}
+
+.libro-fav { text-decoration: none; }
+
+.libro-fav-portada {
+  width: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.resena-fila {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.resena-fila__portada {
+  width: 52px;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.resena-fila h3 { font-size: 1rem; }
+.resena-fila h3 a { text-decoration: none; }
+.resena-fila small { color: var(--text-muted); margin-left: 0.4rem; }
+
+.perfil-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.perfil-stat {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.9rem 0.5rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.perfil-stat strong { font-size: 1.4rem; }
+.perfil-stat span { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; }
+
+.perfil-vacio {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  padding: 0.5rem 0;
+}
+
+.dialogo-perfil {
+  margin: auto;
+  background: var(--bg-elevated);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.4rem;
+  width: min(92vw, 420px);
+}
+
+.dialogo-perfil::backdrop { background: rgba(0, 0, 0, 0.6); }
+.dialogo-ayuda { color: var(--text-muted); font-size: 0.85rem; margin: 0.4rem 0 1rem; }
+
+.select-favorito {
+  display: block;
+  width: 100%;
+  margin-bottom: 0.6rem;
+  padding: 0.6rem;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.dialogo-acciones { display: flex; justify-content: flex-end; gap: 0.6rem; margin-top: 1rem; }
