@@ -8,6 +8,7 @@ function iniciarSesion(nombre) {
 
 function cerrarSesion() {
   localStorage.removeItem("usuarioActual");
+  return fetch("logout.php").catch(() => {});
 }
 
 function actualizarBotonSesion() {
@@ -20,18 +21,13 @@ function actualizarBotonSesion() {
     boton.textContent = `Hola, ${usuario}`;
     boton.onclick = () => {
       if (confirm("¿Cerrar sesión?")) {
-        cerrarSesion();
-        location.reload();
+        cerrarSesion().then(() => location.reload());
       }
     };
   } else {
     boton.textContent = "Iniciar sesión";
     boton.onclick = () => {
-      const nombre = prompt("¿Cómo te llamás?");
-      if (nombre && nombre.trim()) {
-        iniciarSesion(nombre);
-        location.reload();
-      }
+      location.href = "login.html";
     };
   }
 }
