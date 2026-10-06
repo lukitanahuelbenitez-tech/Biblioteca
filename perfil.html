@@ -1,93 +1,107 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perfil | EntreLibros</title>
-    
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Perfil | EntreLibros</title>
 
-    <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 
-
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header class="navbar">
-  <div class="navbar__container">
-    <a href="index.html" class="navbar__logo">Entre<span>Libros</span></a>
-    <button class="btn btn--outline" id="btn-sesion">Iniciar sesión</button>
-  </div>
-</header>
+  <header class="navbar">
+    <div class="navbar__container">
+      <a href="index.html" class="navbar__logo">Entre<span>Libros</span></a>
+      <button class="btn btn--outline" id="btn-sesion">Iniciar sesión</button>
+    </div>
+  </header>
 
   <main>
     <section class="perfil-cabecera">
-      <div class="perfil-avatar"></div>
+      <div class="perfil-avatar" id="perfil-avatar"></div>
       <h1 class="perfil-nombre" id="perfil-nombre">Nombre de usuario</h1>
-      <div class="perfil-stats">
-        <div class="perfil-stat">
-          <strong id="stat-resenas">0</strong>
-          <span>Reseñas</span>
-        </div>
-        <div class="perfil-stat">
-          <strong id="stat-favoritos">0</strong>
-          <span>Favoritos</span>
-        </div>
-      </div>
+      <button class="btn btn--outline" id="btn-editar-perfil">Editar perfil</button>
     </section>
 
-    <section class="perfil-seccion">
-      <h2>Mis favoritos</h2>
-      <div class="perfil-favoritos" id="perfil-favoritos">
-        <div class="libro-fav">
-          <div class="libro-fav-portada"></div>
-          <span>Título del libro</span>
-        </div>
-        <div class="libro-fav">
-          <div class="libro-fav-portada"></div>
-          <span>Título del libro</span>
-        </div>
-        <div class="libro-fav">
-          <div class="libro-fav-portada"></div>
-          <span>Título del libro</span>
-        </div>
-        <div class="libro-fav">
-          <div class="libro-fav-portada"></div>
-          <span>Título del libro</span>
-        </div>
-      </div>
-    </section>
+    <nav class="perfil-tabs">
+      <a href="#" class="perfil-tab is-active" data-tab="perfil">Perfil</a>
+      <a href="#" class="perfil-tab" data-tab="diario">Diario</a>
+      <a href="#" class="perfil-tab" data-tab="resenas">Reseñas</a>
+      <a href="#" class="perfil-tab" data-tab="watchlist">Watchlist</a>
+    </nav>
 
-    <section class="perfil-seccion">
-      <h2>Últimas reseñas</h2>
-      <div id="perfil-resenas">
-        <article class="resena-item">
-          <h3>Título del libro</h3>
-          <p class="resena-puntaje">★★★★☆</p>
-          <p>Texto de ejemplo de la reseña.</p>
-        </article>
-        <article class="resena-item">
-          <h3>Otro libro</h3>
-          <p class="resena-puntaje">★★★☆☆</p>
-          <p>Otro texto de ejemplo.</p>
-        </article>
-      </div>
-    </section>
+    <div class="perfil-panel is-active" id="panel-perfil">
+      <section class="perfil-seccion" id="seccion-favoritos" hidden>
+        <h2>Favoritos</h2>
+        <div class="perfil-favoritos" id="perfil-favoritos"></div>
+      </section>
+
+      <section class="perfil-seccion">
+        <h2>Actividad reciente</h2>
+        <div id="perfil-actividad"></div>
+      </section>
+
+      <section class="perfil-seccion">
+        <h2>Estadísticas</h2>
+        <div class="perfil-stats-grid" id="perfil-stats"></div>
+      </section>
+    </div>
+
+    <div class="perfil-panel" id="panel-diario">
+      <section class="perfil-seccion">
+        <h2>Diario</h2>
+        <div id="perfil-diario"></div>
+      </section>
+    </div>
+
+    <div class="perfil-panel" id="panel-resenas">
+      <section class="perfil-seccion">
+        <h2>Reseñas</h2>
+        <div id="perfil-resenas"></div>
+      </section>
+    </div>
+
+    <div class="perfil-panel" id="panel-watchlist">
+      <section class="perfil-seccion">
+        <h2>Watchlist</h2>
+        <div class="perfil-favoritos" id="perfil-watchlist"></div>
+      </section>
+    </div>
   </main>
+
+  <dialog class="dialogo-perfil" id="dialogo-editar">
+    <form id="form-editar">
+      <h2>Editar perfil</h2>
+      <p class="dialogo-ayuda">Elegí hasta 4 libros favoritos.</p>
+      <div id="selects-favoritos"></div>
+      <div class="dialogo-acciones">
+        <button type="button" class="btn btn--outline" id="btn-cancelar">Cancelar</button>
+        <button type="submit" class="btn btn--primary">Guardar</button>
+      </div>
+    </form>
+  </dialog>
+
   <nav class="tabbar">
     <a href="index.html" class="tabbar__item">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
-    <span>Inicio</span>
-  </a>
-  <a href="catalogo.html" class="tabbar__item">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-    <span>Catálogo</span>
-  </a>
-  <a href="perfil.html" class="tabbar__item is-active">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
-    <span>Perfil</span>
-  </a>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
+      <span>Inicio</span>
+    </a>
+    <a href="catalogo.html" class="tabbar__item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      <span>Catálogo</span>
+    </a>
+    <a href="perfil.html" class="tabbar__item is-active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
+      <span>Perfil</span>
+    </a>
   </nav>
+
+  <script src="libros.js"></script>
+  <script src="resenas.js"></script>
+  <script src="sesion.js"></script>
+  <script src="perfil.js"></script>
 </body>
 </html>
