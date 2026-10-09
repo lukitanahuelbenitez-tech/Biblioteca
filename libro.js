@@ -22,6 +22,8 @@ function renderFicha() {
   const distribucion = calcularDistribucion(libro.id);
   const maxConteo = Math.max(1, ...distribucion.map(d => d.conteo));
   const usuarioActual = obtenerUsuarioActual();
+  const meGusta = usuarioActual ? tieneLike(usuarioActual, libro.id) : false;
+  const enWatchlist = usuarioActual ? tieneWatchlist(usuarioActual, libro.id) : false;
 
   const estrellasLlenas = promedio ? Math.round(promedio) : 0;
   const estrellas = "★".repeat(estrellasLlenas) + "☆".repeat(5 - estrellasLlenas);
@@ -87,6 +89,10 @@ function renderFicha() {
             <span class="tag">${libro.genero}</span>
             <span class="tag">${libro.paginas} páginas</span>
           </div>
+          <div class="ficha-hero__acciones">
+            <button type="button" class="btn-accion${meGusta ? " is-activo" : ""}" id="btn-like">${meGusta ? "♥ Te gusta" : "♡ Me gusta"}</button>
+            <button type="button" class="btn-accion${enWatchlist ? " is-activo" : ""}" id="btn-watchlist">${enWatchlist ? "✓ En tu watchlist" : "+ Watchlist"}</button>
+          </div>
         </div>
       </div>
     </section>
@@ -109,7 +115,7 @@ function renderFicha() {
       </aside>
     </section>
   `;
-
+  conectarAcciones();
   if (usuarioActual) {
     inicializarRatingPicker();
 
@@ -127,13 +133,8 @@ function renderFicha() {
       renderFicha();
     });
   } else {
-    document.getElementById("btn-login-resena").addEventListener("click", () => {
-      const nombre = prompt("¿Cómo te llamás?");
-      if (nombre && nombre.trim()) {
-        iniciarSesion(nombre);
-        renderFicha();
-        actualizarBotonSesion();
-      }
+      document.getElementById("btn-login-resena").addEventListener("click", () => {
+      location.href = "login.html";
     });
   }
 }
@@ -158,5 +159,31 @@ function inicializarRatingPicker() {
 
   document.getElementById("rating-picker").addEventListener("mouseleave", () => {
     pintar(Number(inputPuntuacion.value) || 0);
+  });
+}
+
+function conectarAcciones() {
+  const usuario = obtenerUsuarioActual();
+  const btnLike = document.getElementById("btn-like");
+  const btnWatchlist = document.getElementById("btn-watchlist");
+
+  btnLike.addEventListener("click", () => {
+    if (!usuario) {
+      location.href = "login.html";
+      return;
+    }
+    const activo = alternarLike(usuario, libro.id);
+    btnLike.classList.toggle("is-activo", activo);
+    btnLike.textContent = activo ? "♥ Te gusta" : "♡ Me gusta";
+  });
+
+  btnWatchlist.addEventListener("click", () => {
+    if (!usuario) {
+      location.href = "login.html";
+      return;
+    }
+    const activo = alternarWatchlist(usuario, libro.id);
+    btnWatchlist.classList.toggle("is-activo", activo);
+    btnWatchlist.textContent = activo ? "✓ En tu watchlist" : "+ Watchlist";
   });
 }

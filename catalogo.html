@@ -20,6 +20,10 @@
   <section class="catalogo-section" id="catalogo">
     <h2 class="carrusel-titulo">Catálogo</h2>
 
+    <div class="buscador">
+      <input type="search" id="buscar-catalogo" placeholder="Buscar por título, autor o género..." autocomplete="off">
+    </div>
+
     <div class="catalogo-grid" id="catalogo-grid">
     </div>
   </section>
@@ -27,25 +31,45 @@
   <script src="libros.js"></script>
   <script src="resenas.js"></script>
   <script src="sesion.js"></script>
-  <script src="libro.js"></script>
   <script>
     const grid = document.getElementById("catalogo-grid");
+    const inputBuscar = document.getElementById("buscar-catalogo");
 
-    grid.innerHTML = libros.map(libro => `
-      <a href="libro.html?id=${libro.id}" class="catalogo-card">
-        <div class="catalogo-card__portada">
-          <img src="${libro.portada}" alt="Portada de ${libro.titulo}">
-        </div>
-        <div class="catalogo-card__info">
-          <h3>${libro.titulo}</h3>
-          <p class="catalogo-card__autor">${libro.autor}</p>
-          <div class="catalogo-card__meta">
-            <span class="catalogo-card__genero">${libro.genero}</span>
-            <span class="catalogo-card__estrellas">${calcularPromedio(libro.id) ? "★ " + calcularPromedio(libro.id) : "Sin calificar"}</span>
+    function normalizar(texto) {
+      return texto.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    }
+
+    function renderCatalogo(lista) {
+      if (lista.length === 0) {
+        grid.innerHTML = `<p class="perfil-vacio">No encontramos libros con esa búsqueda.</p>`;
+        return;
+      }
+
+      grid.innerHTML = lista.map(libro => `
+        <a href="libro.html?id=${libro.id}" class="catalogo-card">
+          <div class="catalogo-card__portada">
+            <img src="${libro.portada}" alt="Portada de ${libro.titulo}">
           </div>
-        </div>
-      </a>
-    `).join("");
+          <div class="catalogo-card__info">
+            <h3>${libro.titulo}</h3>
+            <p class="catalogo-card__autor">${libro.autor}</p>
+            <div class="catalogo-card__meta">
+              <span class="catalogo-card__genero">${libro.genero}</span>
+              <span class="catalogo-card__estrellas">${calcularPromedio(libro.id) ? "★ " + calcularPromedio(libro.id) : "Sin calificar"}</span>
+            </div>
+          </div>
+        </a>
+      `).join("");
+    }
+
+    inputBuscar.addEventListener("input", () => {
+      const q = normalizar(inputBuscar.value.trim());
+      renderCatalogo(libros.filter(l =>
+        normalizar(`${l.titulo} ${l.autor} ${l.genero}`).includes(q)
+      ));
+    });
+
+    renderCatalogo(libros);
   </script>
 <nav class="tabbar">
   <a href="index.html" class="tabbar__item ">

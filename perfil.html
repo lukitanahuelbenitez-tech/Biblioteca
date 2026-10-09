@@ -33,23 +33,30 @@
       <a href="#" class="perfil-tab" data-tab="watchlist">Watchlist</a>
     </nav>
 
+    <!-- PERFIL -->
     <div class="perfil-panel is-active" id="panel-perfil">
       <section class="perfil-seccion" id="seccion-favoritos" hidden>
         <h2>Favoritos</h2>
-        <div class="perfil-favoritos" id="perfil-favoritos"></div>
+        <div class="fila-portadas" id="perfil-favoritos"></div>
       </section>
 
       <section class="perfil-seccion">
         <h2>Actividad reciente</h2>
-        <div id="perfil-actividad"></div>
+        <div class="fila-portadas" id="perfil-actividad"></div>
+      </section>
+
+      <section class="perfil-seccion">
+        <h2>Calificaciones <span id="ratings-total"></span></h2>
+        <div id="perfil-ratings"></div>
       </section>
 
       <section class="perfil-seccion">
         <h2>Estadísticas</h2>
-        <div class="perfil-stats-grid" id="perfil-stats"></div>
+        <div class="stats-lista" id="perfil-stats"></div>
       </section>
     </div>
 
+    <!-- DIARIO -->
     <div class="perfil-panel" id="panel-diario">
       <section class="perfil-seccion">
         <h2>Diario</h2>
@@ -57,6 +64,7 @@
       </section>
     </div>
 
+    <!-- RESEÑAS -->
     <div class="perfil-panel" id="panel-resenas">
       <section class="perfil-seccion">
         <h2>Reseñas</h2>
@@ -64,24 +72,39 @@
       </section>
     </div>
 
+    <!-- WATCHLIST -->
     <div class="perfil-panel" id="panel-watchlist">
       <section class="perfil-seccion">
         <h2>Watchlist</h2>
-        <div class="perfil-favoritos" id="perfil-watchlist"></div>
+        <div class="grid-portadas" id="perfil-watchlist"></div>
+      </section>
+    </div>
+
+    <!-- VISTA GENÉRICA (Libros, Este año, Likes, Listas) -->
+    <div class="perfil-panel" id="panel-vista">
+      <section class="perfil-seccion">
+        <button type="button" class="vista-volver" id="vista-volver">‹ Perfil</button>
+        <h2 id="vista-titulo"></h2>
+        <div id="vista-contenido"></div>
       </section>
     </div>
   </main>
 
   <dialog class="dialogo-perfil" id="dialogo-editar">
-    <form id="form-editar">
-      <h2>Editar perfil</h2>
-      <p class="dialogo-ayuda">Elegí hasta 4 libros favoritos.</p>
-      <div id="selects-favoritos"></div>
-      <div class="dialogo-acciones">
-        <button type="button" class="btn btn--outline" id="btn-cancelar">Cancelar</button>
-        <button type="submit" class="btn btn--primary">Guardar</button>
-      </div>
-    </form>
+    <h2>Editar perfil</h2>
+    <p class="dialogo-ayuda">Tus 4 libros favoritos. Tocá un lugar y buscá el libro.</p>
+
+    <div class="fila-portadas" id="slots-favoritos"></div>
+
+    <div class="buscador" id="buscador-favoritos" hidden>
+      <input type="search" id="input-buscar-fav" placeholder="Buscar por título o autor..." autocomplete="off">
+    </div>
+    <div class="resultados" id="resultados-favoritos"></div>
+
+    <div class="dialogo-acciones">
+      <button type="button" class="btn btn--outline" id="btn-cancelar">Cancelar</button>
+      <button type="button" class="btn btn--primary" id="btn-guardar">Guardar</button>
+    </div>
   </dialog>
 
   <nav class="tabbar">
