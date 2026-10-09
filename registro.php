@@ -21,7 +21,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($consulta->execute()) {
         $_SESSION["usuario_id"] = $consulta->insert_id;
         $_SESSION["usuario_nombre"] = $nombre;
-        header("Location: catalogo.html");
+
+        $nombre_js = json_encode($nombre, JSON_HEX_TAG | JSON_HEX_AMP);
+        echo "<!DOCTYPE html><meta charset='utf-8'><script>"
+           . "localStorage.setItem('usuarioActual', $nombre_js);"
+           . "location.href = 'catalogo.html';"
+           . "</script>";
         exit;
     } else {
         if ($conexion->errno === 1062) {
