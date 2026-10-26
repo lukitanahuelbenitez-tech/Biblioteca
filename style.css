@@ -1327,6 +1327,7 @@ a.libro-card { display: block; }
 .resena-card__texto {
   display: -webkit-box;
   -webkit-line-clamp: 4;
+  line-clamp: 4;
   -webkit-box-orient: vertical;
   overflow: hidden;
   white-space: pre-line;
@@ -1549,6 +1550,7 @@ a.fila-resena { color: var(--text); text-decoration: none; }
 .fila-resena__texto {
   display: -webkit-box;
   -webkit-line-clamp: 3;
+  line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
   white-space: pre-line;
