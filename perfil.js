@@ -5,7 +5,6 @@ const MESES = ["enero", "febrero", "marzo", "abril", "mayo", "junio",
 
 let datos = { resenas: [], unicos: [] };
 
-/* ---------- Utilidades ---------- */
 
 function escapar(texto) {
   const div = document.createElement("div");
@@ -26,6 +25,7 @@ function parsearFecha(texto) {
   return new Date(a, m - 1, d);
 }
 
+
 function marcaTiempo(r) {
   return r.ts || parsearFecha(r.fecha).getTime();
 }
@@ -34,7 +34,7 @@ function vacio(texto) {
   return `<p class="perfil-vacio">${texto}</p>`;
 }
 
-/* ---------- Datos ---------- */
+
 
 function obtenerFavoritos() {
   return JSON.parse(localStorage.getItem(`favoritos_${usuario}`)) || [];
@@ -51,13 +51,24 @@ function obtenerResenasDeUsuario() {
   Object.keys(todas).forEach(idLibro => {
     const libro = libros.find(l => l.id === Number(idLibro));
     if (!libro) return;
-    todas[idLibro].forEach(r => {
-      if (r.usuario === usuario) lista.push({ ...r, libro });
+    todas[idLibro].forEach((r, n) => {
+      if (r.usuario === usuario) lista.push({ ...r, libro, n });
     });
   });
 
   return lista.sort((a, b) => marcaTiempo(b) - marcaTiempo(a));
 }
+
+
+function resenasLikeadas() {
+  return obtenerResenasLikeadas(usuario).map(({ libroId, n }) => {
+    const libro = libros.find(l => l.id === libroId);
+    const r = obtenerResenas(libroId)[n];
+    return libro && r ? { ...r, libro, n } : null;
+  }).filter(Boolean).reverse();
+}
+
+
 function ultimaResenaPorLibro(resenas) {
   const vistos = new Set();
   return resenas.filter(r => {
@@ -71,6 +82,7 @@ function librosDeIds(ids) {
   return ids.map(id => libros.find(l => l.id === id)).filter(Boolean);
 }
 
+
 function htmlPoster(libro, pie = "") {
   return `
     <a class="poster" href="libro.html?id=${libro.id}">
@@ -83,19 +95,32 @@ function pieEstrellas(r) {
   return `<span class="poster__pie">${estrellas(r.puntuacion)}${r.comentario ? ' <i class="poster__resena">≡</i>' : ""}</span>`;
 }
 
-function htmlFilaResena(r, completa) {
+
+function htmlFilaResena(r, modo) {
+  const href = r.comentario
+    ? `resena.html?libro=${r.libro.id}&n=${r.n}`
+    : `libro.html?id=${r.libro.id}`;
+
+  const autor = modo === "like"
+    ? `<p class="fila-resena__autor">Reseña de <strong>${escapar(r.usuario)}</strong></p>`
+    : "";
+  const icono = modo === "diario" && r.comentario ? ' <i class="poster__resena">≡</i>' : "";
+  const extracto = r.comentario && modo !== "diario"
+    ? `<p class="fila-resena__texto">${escapar(r.comentario)}</p>`
+    : "";
+
   return `
-    <article class="fila-resena">
+    <a class="fila-resena" href="${href}">
       <img class="fila-resena__portada" src="${r.libro.portada}" alt="">
-      <div>
-        <h3><a href="libro.html?id=${r.libro.id}">${escapar(r.libro.titulo)}</a></h3>
-        <p class="fila-resena__estrellas">${estrellas(r.puntuacion)} <small>${escapar(r.fecha)}</small></p>
-        ${r.comentario && completa ? `<p>${escapar(r.comentario)}</p>` : ""}
+      <div class="fila-resena__cuerpo">
+        <h3>${escapar(r.libro.titulo)} <small>${r.libro.anio}</small></h3>
+        ${autor}
+        <p class="fila-resena__estrellas">${estrellas(r.puntuacion)} <small>${escapar(formatearRango(r))}</small>${icono}</p>
+        ${extracto}
       </div>
-    </article>`;
+    </a>`;
 }
 
-/* ---------- Render del perfil ---------- */
 
 function renderFavoritos() {
   const seccion = document.getElementById("seccion-favoritos");
@@ -165,7 +190,7 @@ function renderStats() {
     ["anio", "Este año", esteAnio],
     ["resenas", "Reseñas", datos.resenas.filter(r => r.comentario).length],
     ["listas", "Listas", 0],
-    ["likes", "Likes", obtenerLikes(usuario).length]
+    ["likes", "Likes", obtenerLikes(usuario).length + resenasLikeadas().length]
   ];
 
   document.getElementById("perfil-stats").innerHTML = filas.map(([clave, etiqueta, valor]) => `
@@ -175,6 +200,8 @@ function renderStats() {
     </button>`).join("");
 }
 
+
+
 function renderDiario() {
   const cont = document.getElementById("perfil-diario");
   if (datos.resenas.length === 0) {
@@ -182,20 +209,23 @@ function renderDiario() {
     return;
   }
 
+
+  const ordenadas = [...datos.resenas].sort((a, b) => fechaLectura(b) - fechaLectura(a));
+
   let mesActual = "";
-  cont.innerHTML = datos.resenas.map(r => {
-    const f = new Date(marcaTiempo(r));
+  cont.innerHTML = ordenadas.map(r => {
+    const f = new Date(fechaLectura(r));
     const mes = `${MESES[f.getMonth()]} ${f.getFullYear()}`;
     const encabezado = mes !== mesActual ? `<h3 class="diario-mes">${mes}</h3>` : "";
     mesActual = mes;
-    return encabezado + htmlFilaResena(r, false);
+    return encabezado + htmlFilaResena(r, "diario");
   }).join("");
 }
 
 function renderResenas() {
   const conTexto = datos.resenas.filter(r => r.comentario);
   document.getElementById("perfil-resenas").innerHTML = conTexto.length
-    ? conTexto.map(r => htmlFilaResena(r, true)).join("")
+    ? conTexto.map(r => htmlFilaResena(r, "resena")).join("")
     : vacio("Todavía no escribiste reseñas.");
 }
 
@@ -219,7 +249,7 @@ function renderTodo() {
   renderWatchlist();
 }
 
-/* ---------- Pestañas y vistas ---------- */
+
 
 function mostrarPanel(nombre) {
   document.querySelectorAll(".perfil-panel").forEach(p =>
@@ -244,11 +274,22 @@ function abrirVista(clave) {
       ? `<div class="grid-portadas">${lista.map(r => htmlPoster(r.libro, pieEstrellas(r))).join("")}</div>`
       : vacio("Todavía no hay libros acá.");
   } else if (clave === "likes") {
-    const lista = librosDeIds(obtenerLikes(usuario)).reverse();
+    const libs = librosDeIds(obtenerLikes(usuario)).reverse();
+    const resLikes = resenasLikeadas();
     titulo.textContent = "Likes";
-    cont.innerHTML = lista.length
-      ? `<div class="grid-portadas">${lista.map(l => htmlPoster(l)).join("")}</div>`
-      : vacio("Todavía no le diste like a ningún libro. Tocá el ♡ en la ficha de un libro.");
+
+    if (libs.length === 0 && resLikes.length === 0) {
+      cont.innerHTML = vacio("Todavía no le diste like a nada. Tocá el ♡ en un libro o en una reseña.");
+    } else {
+      cont.innerHTML =
+        (libs.length
+          ? `<h3 class="vista-subtitulo">Libros</h3>
+             <div class="grid-portadas">${libs.map(l => htmlPoster(l)).join("")}</div>`
+          : "") +
+        (resLikes.length
+          ? `<h3 class="vista-subtitulo">Reseñas</h3>${resLikes.map(r => htmlFilaResena(r, "like")).join("")}`
+          : "");
+    }
   } else if (clave === "listas") {
     titulo.textContent = "Listas";
     cont.innerHTML = vacio("Todavía no creaste listas. Esta función llega pronto.");
@@ -275,7 +316,7 @@ function iniciarNavegacion() {
   document.getElementById("vista-volver").addEventListener("click", () => mostrarPanel("perfil"));
 }
 
-/* ---------- Editar perfil  ---------- */
+
 
 let borrador = [];
 let slotActivo = null;
@@ -376,7 +417,6 @@ function iniciarEdicion() {
   });
 }
 
-/* ---------- Inicio ---------- */
 
 document.addEventListener("DOMContentLoaded", () => {
   iniciarNavegacion();
