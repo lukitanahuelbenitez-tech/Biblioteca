@@ -1250,3 +1250,314 @@ h1, h2, h3 {
     margin: 1.5rem 1rem;
   }
 }
+
+
+
+
+/* ---------- Reseñas, registro de lectura y página de reseña ---------- */
+
+a.libro-card { display: block; }
+
+.ficha-cuerpo--simple {
+  grid-template-columns: 1fr;
+  max-width: 760px;
+}
+
+.avatar {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--violet-dim);
+  border: 1px solid var(--violet);
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text);
+}
+
+/* --- Promedio al lado del histograma --- */
+
+.ratings--ficha { align-items: center; }
+.ratings--ficha .distribucion__etiquetas { margin-bottom: 0; }
+
+.ratings__promedio small {
+  margin-top: 2px;
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+/* --- Lista de reseñas en la ficha --- */
+
+.resenas__lista { display: flex; flex-direction: column; gap: 0.8rem; }
+
+.resena-card {
+  display: block;
+  padding: 1rem 1.1rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  text-decoration: none;
+  transition: border-color 0.2s ease;
+}
+
+.resena-card:hover { border-color: var(--violet); }
+
+.resena-card__cabecera {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-bottom: 0.7rem;
+}
+
+.resena-card__quien {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
+.resena-card__estrellas { font-size: 0.85rem; color: var(--gold); }
+.resena-card__fecha { font-size: 0.75rem; color: var(--text-muted); white-space: nowrap; }
+
+.resena-card__texto {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  white-space: pre-line;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.resena-card__pie {
+  display: block;
+  margin-top: 0.6rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.resenas__vacio { color: var(--text-muted); font-size: 0.95rem; }
+
+/* --- Panel grande "Reseñar o registrar" --- */
+
+.ficha-hero__acciones { margin-bottom: 0.4rem; }
+
+.btn-accion--primario {
+  background: var(--violet);
+  border-color: var(--violet);
+  color: #fff;
+}
+
+.panel-log {
+  margin: auto;
+  padding: 0;
+  width: min(94vw, 640px);
+  max-height: 92vh;
+  overflow-y: auto;
+  background: var(--bg-elevated);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+}
+
+.panel-log::backdrop { background: rgba(0, 0, 0, 0.7); }
+
+.panel-log form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  padding: 1.4rem;
+}
+
+.panel-log__cabecera {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+}
+
+.panel-log__cabecera h2 { font-size: 1.2rem; margin-bottom: 0.2rem; }
+.panel-log__cabecera p { font-size: 0.85rem; color: var(--text-muted); }
+.panel-log__usuario { margin-top: 0.3rem; }
+
+.panel-log__portada {
+  width: 56px;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.panel-log__cerrar {
+  margin-left: auto;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.8rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.panel-log__fechas {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8rem;
+}
+
+.panel-log__fechas label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.panel-log__fechas input {
+  padding: 0.6rem;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-family: var(--font-body);
+  color-scheme: dark;
+}
+
+.panel-log__rating {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.panel-log__rating .rating-picker { margin-bottom: 0; }
+
+.panel-log__texto {
+  width: 100%;
+  min-height: 220px;
+  padding: 0.9rem;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  resize: vertical;
+}
+
+.panel-log__texto:focus,
+.panel-log__fechas input:focus {
+  outline: none;
+  border-color: var(--violet);
+}
+
+.panel-log__acciones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+}
+
+@media (max-width: 640px) {
+  .panel-log {
+    width: 100vw;
+    max-width: 100vw;
+    height: 100dvh;
+    max-height: 100dvh;
+    border: none;
+    border-radius: 0;
+  }
+  .panel-log__texto { min-height: 40vh; }
+}
+
+/* --- Página de una reseña --- */
+
+.resena-pagina {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 1.2rem 1.2rem 5rem;
+}
+
+.resena-pagina__volver {
+  display: inline-block;
+  margin-bottom: 1.2rem;
+  color: var(--violet-soft);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.resena-completa__cabecera {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  margin-bottom: 1.4rem;
+}
+
+.resena-completa__portada {
+  width: 92px;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+}
+
+.resena-completa__autor {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.resena-completa__cabecera h1 { font-size: 1.4rem; line-height: 1.2; margin-bottom: 0.3rem; }
+.resena-completa__cabecera h1 a { color: var(--text); text-decoration: none; }
+.resena-completa__cabecera h1 small { font-size: 0.9rem; font-weight: 400; color: var(--text-muted); }
+
+.resena-completa__estrellas { color: var(--gold); font-size: 1.1rem; }
+.resena-completa__fecha { margin-top: 0.2rem; font-size: 0.8rem; color: var(--text-muted); }
+
+.resena-completa__texto {
+  white-space: pre-wrap;
+  font-size: 1rem;
+  line-height: 1.8;
+  margin-bottom: 1.6rem;
+}
+
+.resena-completa__acciones {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.resena-completa__likes { font-size: 0.85rem; color: var(--text-muted); }
+
+/* --- Filas del perfil (diario, reseñas y likes) ahora son enlaces --- */
+
+a.fila-resena { color: var(--text); text-decoration: none; }
+.fila-resena__cuerpo { min-width: 0; }
+.fila-resena h3 small { font-weight: 400; color: var(--text-muted); }
+
+.fila-resena__autor { font-size: 0.8rem; color: var(--text-muted); }
+
+.fila-resena__texto {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  white-space: pre-line;
+}
+
+.vista-subtitulo {
+  margin: 1rem 0 0.6rem;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
