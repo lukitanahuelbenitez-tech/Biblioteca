@@ -13,7 +13,22 @@ if (!libro) {
   `;
 } else {
   document.title = `${libro.titulo} | EntreLibros`;
-  renderFicha();
+  cargarFicha();
+}
+
+// Pide las reseñas del libro a la base de datos y dibuja la ficha
+async function cargarFicha() {
+  let calificaciones = [];
+  let errorCarga = false;
+
+  try {
+    calificaciones = await obtenerResenasLibro(libro.id);
+  } catch (error) {
+    console.error(error);
+    errorCarga = true;
+  }
+
+  renderFicha(calificaciones, errorCarga);
 }
 
 function hoyISO() {
@@ -24,9 +39,8 @@ function hoyISO() {
 }
 
 function htmlResenaCard(r) {
-  const likes = obtenerLikesResena(idResena(libro.id, r.n)).length;
   return `
-    <a class="resena-card" href="resena.html?libro=${libro.id}&n=${r.n}">
+    <a class="resena-card" href="resena.html?id=${r.id}">
       <div class="resena-card__cabecera">
         <span class="avatar">${escapar(r.usuario.charAt(0).toUpperCase())}</span>
         <div class="resena-card__quien">
@@ -36,24 +50,23 @@ function htmlResenaCard(r) {
         <span class="resena-card__fecha">${escapar(formatearRango(r))}</span>
       </div>
       <p class="resena-card__texto">${escapar(r.comentario)}</p>
-      <span class="resena-card__pie">♥ ${likes}</span>
+      <span class="resena-card__pie">${r.le_gusta ? "♥" : "♡"} ${r.likes}</span>
     </a>`;
 }
 
-function renderFicha() {
+function renderFicha(calificaciones, errorCarga) {
   const usuarioActual = obtenerUsuarioActual();
   const meGusta = usuarioActual ? tieneLike(usuarioActual, libro.id) : false;
   const enWatchlist = usuarioActual ? tieneWatchlist(usuarioActual, libro.id) : false;
 
-  const calificaciones = obtenerResenas(libro.id);
   const total = calificaciones.length;
-  const promedio = calcularPromedio(libro.id);
-  const distribucion = calcularDistribucion(libro.id);
+  const promedio = calcularPromedio(calificaciones);
+  const distribucion = calcularDistribucion(calificaciones);
   const maxConteo = Math.max(1, ...distribucion.map(d => d.conteo));
 
   const estrellasLlenas = promedio ? Math.round(promedio) : 0;
   const estrellas = "★".repeat(estrellasLlenas) + "☆".repeat(5 - estrellasLlenas);
-  const etiquetaTotal = `${total} calificación${total === 1 ? "" : "es"}`;
+  const etiquetaTotal = total === 1 ? "1 calificación" : `${total} calificaciones`;
   const textoRating = promedio
     ? `${estrellas} <span>(${promedio}/5 · ${etiquetaTotal})</span>`
     : `<span class="ficha-hero__sin-resenas">Sin calificaciones todavía</span>`;
@@ -66,15 +79,17 @@ function renderFicha() {
 
   const etiquetasHTML = distribucion.map(({ valor }) => `<span>${valor}</span>`).join("");
 
-  // Solo las que tienen texto, de la más nueva a la más vieja (n = posición original)
-  const conTexto = calificaciones
-    .map((r, n) => ({ ...r, n }))
-    .filter(r => r.comentario)
-    .reverse();
+  // El servidor las manda de la más nueva a la más vieja; acá solo las que tienen texto
+  const conTexto = calificaciones.filter(r => r.comentario);
 
-  const listaResenas = conTexto.length === 0
-    ? `<p class="resenas__vacio">Todavía no hay reseñas escritas. ¡Sé el primero en dejar una!</p>`
-    : conTexto.map(htmlResenaCard).join("");
+  let listaResenas;
+  if (errorCarga) {
+    listaResenas = `<p class="resenas__vacio">No pudimos cargar las reseñas. Probá recargar la página.</p>`;
+  } else if (conTexto.length === 0) {
+    listaResenas = `<p class="resenas__vacio">Todavía no hay reseñas escritas. ¡Sé el primero en dejar una!</p>`;
+  } else {
+    listaResenas = conTexto.map(htmlResenaCard).join("");
+  }
 
   const panelLog = usuarioActual ? `
     <dialog class="panel-log" id="panel-log">
@@ -173,18 +188,19 @@ function renderFicha() {
   `;
 
   conectarAcciones();
-  if (usuarioActual) inicializarPanelLog(usuarioActual);
+  if (usuarioActual) inicializarPanelLog();
 }
 
-function inicializarPanelLog(usuarioActual) {
+function inicializarPanelLog() {
   const panel = document.getElementById("panel-log");
+  const form = document.getElementById("form-log");
 
   inicializarRatingPicker();
 
   document.getElementById("log-cerrar").addEventListener("click", () => panel.close());
   document.getElementById("log-cancelar").addEventListener("click", () => panel.close());
 
-  document.getElementById("form-log").addEventListener("submit", (e) => {
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const puntuacion = document.getElementById("input-puntuacion").value;
     const comentario = document.getElementById("input-comentario").value.trim();
@@ -200,8 +216,16 @@ function inicializarPanelLog(usuarioActual) {
       return;
     }
 
-    guardarResena(libro.id, usuarioActual, puntuacion, comentario, inicio || null, fin || null);
-    renderFicha();
+    const botonGuardar = form.querySelector('button[type="submit"]');
+    botonGuardar.disabled = true;
+
+    try {
+      await guardarResena(libro.id, puntuacion, comentario, inicio, fin);
+      await cargarFicha();
+    } catch (error) {
+      botonGuardar.disabled = false;
+      manejarError(error);
+    }
   });
 }
 
