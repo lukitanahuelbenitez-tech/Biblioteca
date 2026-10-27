@@ -39,6 +39,10 @@
       return texto.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     }
 
+
+    let promedios = {};
+
+
     function renderCatalogo(lista) {
       if (lista.length === 0) {
         grid.innerHTML = `<p class="perfil-vacio">No encontramos libros con esa búsqueda.</p>`;
@@ -55,8 +59,7 @@
             <p class="catalogo-card__autor">${libro.autor}</p>
             <div class="catalogo-card__meta">
               <span class="catalogo-card__genero">${libro.genero}</span>
-              <span class="catalogo-card__estrellas">${calcularPromedio(libro.id) ? "★ " + calcularPromedio(libro.id) : "Sin calificar"}</span>
-            </div>
+              <span class="catalogo-card__estrellas">${promedios[libro.id] ? "★ " + promedios[libro.id].promedio.toFixed(1) : "Sin calificar"}</span>
           </div>
         </a>
       `).join("");
@@ -70,6 +73,13 @@
     });
 
     renderCatalogo(libros);
+    obtenerPromedios()
+      .then(datos => {
+        promedios = datos;
+        inputBuscar.dispatchEvent(new Event("input"));
+      })
+      .catch(error => console.error(error));
+
   </script>
 <nav class="tabbar">
   <a href="index.html" class="tabbar__item ">
