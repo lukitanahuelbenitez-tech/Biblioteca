@@ -1,3 +1,5 @@
+/* ---------- Utilidades compartidas ---------- */
+
 function escapar(texto) {
   const div = document.createElement("div");
   div.textContent = texto;
@@ -8,46 +10,90 @@ function textoEstrellas(puntuacion) {
   return "★".repeat(Math.floor(puntuacion)) + (puntuacion % 1 ? "½" : "");
 }
 
-/* ---------- Reseñas ---------- */
+/* ---------- Comunicación con el servidor ---------- */
 
-function obtenerResenas(idLibro) {
-  const todas = JSON.parse(localStorage.getItem("resenas")) || {};
-  return todas[idLibro] || [];
+// Hace el pedido y devuelve el JSON. Si el servidor responde con error, lanza una excepción.
+async function pedir(ruta, datos = null) {
+  const opciones = datos ? { method: "POST", body: new URLSearchParams(datos) } : {};
+  const respuesta = await fetch(ruta, opciones);
+
+  let json = null;
+  try {
+    json = await respuesta.json();
+  } catch (e) {
+  }
+
+  if (respuesta.status === 401) {
+    localStorage.removeItem("usuarioActual");
+    const error = new Error((json && json.error) || "Tenés que iniciar sesión.");
+    error.sinSesion = true;
+    throw error;
+  }
+  if (!respuesta.ok) {
+    throw new Error((json && json.error) || "Ocurrió un error. Probá de nuevo.");
+  }
+  return json;
 }
 
-// inicio y fin: fechas "AAAA-MM-DD"
-function guardarResena(idLibro, usuario, puntuacion, comentario, inicio = null, fin = null) {
-  const todas = JSON.parse(localStorage.getItem("resenas")) || {};
-  if (!todas[idLibro]) todas[idLibro] = [];
+function manejarError(error) {
+  if (error.sinSesion) {
+    alert("Tu sesión venció. Iniciá sesión de nuevo.");
+    location.href = "login.html";
+  } else {
+    alert(error.message);
+  }
+}
 
-  todas[idLibro].push({
-    usuario,
-    puntuacion: Number(puntuacion),
+async function obtenerResenasLibro(idLibro) {
+  return (await pedir(`resenas_obtener.php?libro=${idLibro}`)).resenas;
+}
+
+async function obtenerResena(id) {
+  const lista = (await pedir(`resenas_obtener.php?id=${id}`)).resenas;
+  return lista[0] || null;
+}
+
+async function obtenerMisResenas() {
+  return (await pedir("resenas_obtener.php?mias=1")).resenas;
+}
+
+async function obtenerResenasLikeadas() {
+  return (await pedir("resenas_obtener.php?likeadas=1")).resenas;
+}
+
+async function obtenerPromedios() {
+  return (await pedir("resenas_promedios.php")).libros;
+}
+
+
+function guardarResena(idLibro, puntuacion, comentario, inicio, fin) {
+  return pedir("resena_guardar.php", {
+    libro: idLibro,
+    puntuacion,
     comentario,
-    inicio,
-    fin,
-    fecha: new Date().toLocaleDateString("es-AR"),
-    ts: Date.now()
+    inicio: inicio || "",
+    fin: fin || ""
   });
-
-  localStorage.setItem("resenas", JSON.stringify(todas));
 }
 
-function calcularPromedio(idLibro) {
-  const resenas = obtenerResenas(idLibro);
-  if (resenas.length === 0) return null;
-  const suma = resenas.reduce((acc, r) => acc + r.puntuacion, 0);
-  return (suma / resenas.length).toFixed(1);
+// Devuelve { le_gusta, likes }
+function alternarLikeResena(id) {
+  return pedir("resena_like.php", { id });
 }
 
-function calcularDistribucion(idLibro) {
-  const resenas = obtenerResenas(idLibro);
+function calcularPromedio(lista) {
+  if (lista.length === 0) return null;
+  const suma = lista.reduce((acc, r) => acc + r.puntuacion, 0);
+  return (suma / lista.length).toFixed(1);
+}
+
+function calcularDistribucion(lista) {
   const distribucion = [0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5].map(valor => ({
     valor,
     conteo: 0
   }));
 
-  resenas.forEach(r => {
+  lista.forEach(r => {
     const item = distribucion.find(d => d.valor === r.puntuacion);
     if (item) item.conteo++;
   });
@@ -79,16 +125,14 @@ function formatearRango(r) {
   }
   const unico = r.fin || r.inicio;
   if (unico) return formatearDia(unico, anioDe(unico) !== anioActual);
-  return r.fecha;
+  return new Date(r.ts).toLocaleDateString("es-AR");
 }
 
 // Fecha que usa el diario para ordenar y agrupar por mes
 function fechaLectura(r) {
   const iso = r.fin || r.inicio;
   if (iso) return new Date(`${iso}T12:00:00`).getTime();
-  if (r.ts) return r.ts;
-  const [d, m, a] = r.fecha.split("/").map(Number);
-  return new Date(a, m - 1, d).getTime();
+  return r.ts;
 }
 
 /* ---------- Likes de libros y watchlist ---------- */
@@ -114,33 +158,3 @@ function obtenerWatchlist(usuario) { return obtenerLista("watchlist", usuario); 
 function tieneWatchlist(usuario, idLibro) { return obtenerWatchlist(usuario).includes(idLibro); }
 function alternarWatchlist(usuario, idLibro) { return alternarEnLista("watchlist", usuario, idLibro); }
 
-/* ---------- Likes de reseñas ---------- */
-
-function idResena(idLibro, n) {
-  return `${idLibro}:${n}`;
-}
-
-function obtenerLikesResena(id) {
-  const todos = JSON.parse(localStorage.getItem("likes_resenas")) || {};
-  return todos[id] || [];
-}
-
-function alternarLikeResena(id, usuario) {
-  const todos = JSON.parse(localStorage.getItem("likes_resenas")) || {};
-  const usuarios = todos[id] || [];
-  todos[id] = usuarios.includes(usuario)
-    ? usuarios.filter(u => u !== usuario)
-    : [...usuarios, usuario];
-  localStorage.setItem("likes_resenas", JSON.stringify(todos));
-  return todos[id].includes(usuario);
-}
-
-function obtenerResenasLikeadas(usuario) {
-  const todos = JSON.parse(localStorage.getItem("likes_resenas")) || {};
-  return Object.keys(todos)
-    .filter(id => todos[id].includes(usuario))
-    .map(id => {
-      const [libroId, n] = id.split(":").map(Number);
-      return { libroId, n };
-    });
-}
