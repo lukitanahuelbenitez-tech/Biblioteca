@@ -3,8 +3,9 @@ const usuario = obtenerUsuarioActual();
 const MESES = ["enero", "febrero", "marzo", "abril", "mayo", "junio",
                "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
 
-let datos = { resenas: [], unicos: [] };
+let datos = { resenas: [], unicos: [], likeadas: [] };
 
+/* ---------- Utilidades ---------- */
 
 function escapar(texto) {
   const div = document.createElement("div");
@@ -20,21 +21,16 @@ function estrellas(puntuacion) {
   return "★".repeat(Math.floor(puntuacion)) + (puntuacion % 1 ? "½" : "");
 }
 
-function parsearFecha(texto) {
-  const [d, m, a] = texto.split("/").map(Number);
-  return new Date(a, m - 1, d);
-}
-
-
+// "ts" es el momento en que se guardó la reseña (lo manda el servidor)
 function marcaTiempo(r) {
-  return r.ts || parsearFecha(r.fecha).getTime();
+  return r.ts;
 }
 
 function vacio(texto) {
   return `<p class="perfil-vacio">${texto}</p>`;
 }
 
-
+/* ---------- Datos ---------- */
 
 function obtenerFavoritos() {
   return JSON.parse(localStorage.getItem(`favoritos_${usuario}`)) || [];
@@ -44,31 +40,14 @@ function guardarFavoritos(ids) {
   localStorage.setItem(`favoritos_${usuario}`, JSON.stringify(ids));
 }
 
-function obtenerResenasDeUsuario() {
-  const todas = JSON.parse(localStorage.getItem("resenas")) || {};
-  const lista = [];
-
-  Object.keys(todas).forEach(idLibro => {
-    const libro = libros.find(l => l.id === Number(idLibro));
-    if (!libro) return;
-    todas[idLibro].forEach((r, n) => {
-      if (r.usuario === usuario) lista.push({ ...r, libro, n });
-    });
-  });
-
-  return lista.sort((a, b) => marcaTiempo(b) - marcaTiempo(a));
+// El servidor manda el id del libro; acá le sumamos los datos del libro (título, portada...)
+function conLibros(lista) {
+  return lista
+    .map(r => ({ ...r, libro: libros.find(l => l.id === r.libro) }))
+    .filter(r => r.libro);
 }
 
-
-function resenasLikeadas() {
-  return obtenerResenasLikeadas(usuario).map(({ libroId, n }) => {
-    const libro = libros.find(l => l.id === libroId);
-    const r = obtenerResenas(libroId)[n];
-    return libro && r ? { ...r, libro, n } : null;
-  }).filter(Boolean).reverse();
-}
-
-
+// Una entrada por libro: la reseña más reciente de cada uno
 function ultimaResenaPorLibro(resenas) {
   const vistos = new Set();
   return resenas.filter(r => {
@@ -82,6 +61,7 @@ function librosDeIds(ids) {
   return ids.map(id => libros.find(l => l.id === id)).filter(Boolean);
 }
 
+/* ---------- HTML reutilizable ---------- */
 
 function htmlPoster(libro, pie = "") {
   return `
@@ -95,10 +75,10 @@ function pieEstrellas(r) {
   return `<span class="poster__pie">${estrellas(r.puntuacion)}${r.comentario ? ' <i class="poster__resena">≡</i>' : ""}</span>`;
 }
 
-
+// modo: "diario" (fechas + ≡), "resena" (con extracto) o "like" (con autor)
 function htmlFilaResena(r, modo) {
   const href = r.comentario
-    ? `resena.html?libro=${r.libro.id}&n=${r.n}`
+    ? `resena.html?id=${r.id}`
     : `libro.html?id=${r.libro.id}`;
 
   const autor = modo === "like"
@@ -121,6 +101,7 @@ function htmlFilaResena(r, modo) {
     </a>`;
 }
 
+/* ---------- Render del perfil ---------- */
 
 function renderFavoritos() {
   const seccion = document.getElementById("seccion-favoritos");
@@ -190,7 +171,7 @@ function renderStats() {
     ["anio", "Este año", esteAnio],
     ["resenas", "Reseñas", datos.resenas.filter(r => r.comentario).length],
     ["listas", "Listas", 0],
-    ["likes", "Likes", obtenerLikes(usuario).length + resenasLikeadas().length]
+    ["likes", "Likes", obtenerLikes(usuario).length + datos.likeadas.length]
   ];
 
   document.getElementById("perfil-stats").innerHTML = filas.map(([clave, etiqueta, valor]) => `
@@ -200,7 +181,7 @@ function renderStats() {
     </button>`).join("");
 }
 
-
+/* ---------- Render de las otras pestañas ---------- */
 
 function renderDiario() {
   const cont = document.getElementById("perfil-diario");
@@ -209,7 +190,7 @@ function renderDiario() {
     return;
   }
 
-
+  // El diario ordena y agrupa por la fecha en que leíste el libro
   const ordenadas = [...datos.resenas].sort((a, b) => fechaLectura(b) - fechaLectura(a));
 
   let mesActual = "";
@@ -236,10 +217,8 @@ function renderWatchlist() {
     : vacio("Tu watchlist está vacía.");
 }
 
+// Dibuja todo con lo que hay en "datos" (no pide nada al servidor)
 function renderTodo() {
-  const resenas = obtenerResenasDeUsuario();
-  datos = { resenas, unicos: ultimaResenaPorLibro(resenas) };
-
   renderFavoritos();
   renderActividad();
   renderRatings();
@@ -249,7 +228,20 @@ function renderTodo() {
   renderWatchlist();
 }
 
+// Pide a la base de datos tus reseñas y las que le diste like, y después dibuja
+async function cargarTodo() {
+  try {
+    const [mias, likeadas] = await Promise.all([obtenerMisResenas(), obtenerResenasLikeadas()]);
+    const resenas = conLibros(mias);
+    datos = { resenas, unicos: ultimaResenaPorLibro(resenas), likeadas: conLibros(likeadas) };
+  } catch (error) {
+    manejarError(error);
+    if (error.sinSesion) return;
+  }
+  renderTodo();
+}
 
+/* ---------- Pestañas y vistas ---------- */
 
 function mostrarPanel(nombre) {
   document.querySelectorAll(".perfil-panel").forEach(p =>
@@ -275,7 +267,7 @@ function abrirVista(clave) {
       : vacio("Todavía no hay libros acá.");
   } else if (clave === "likes") {
     const libs = librosDeIds(obtenerLikes(usuario)).reverse();
-    const resLikes = resenasLikeadas();
+    const resLikes = datos.likeadas;
     titulo.textContent = "Likes";
 
     if (libs.length === 0 && resLikes.length === 0) {
@@ -316,7 +308,7 @@ function iniciarNavegacion() {
   document.getElementById("vista-volver").addEventListener("click", () => mostrarPanel("perfil"));
 }
 
-
+/* ---------- Editar perfil (favoritos con buscador) ---------- */
 
 let borrador = [];
 let slotActivo = null;
@@ -417,6 +409,7 @@ function iniciarEdicion() {
   });
 }
 
+/* ---------- Inicio ---------- */
 
 document.addEventListener("DOMContentLoaded", () => {
   iniciarNavegacion();
@@ -435,5 +428,5 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("perfil-avatar").textContent = usuario.charAt(0).toUpperCase();
 
   iniciarEdicion();
-  renderTodo();
+  cargarTodo();
 });
