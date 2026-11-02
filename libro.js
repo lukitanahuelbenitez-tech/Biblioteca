@@ -1,22 +1,43 @@
 const params = new URLSearchParams(window.location.search);
 const id = Number(params.get("id"));
-const libro = libros.find(l => l.id === id);
 const root = document.getElementById("ficha-root");
+let libro = null;
 
-if (!libro) {
-  root.innerHTML = `
-    <section class="ficha-error">
-      <h1>No encontramos ese libro</h1>
-      <p>Puede que el enlace esté roto o el libro ya no exista en el catálogo.</p>
-      <a href="catalogo.html" class="btn btn--primary">Volver al catálogo</a>
-    </section>
-  `;
-} else {
-  document.title = `${libro.titulo} | EntreLibros`;
-  cargarFicha();
+iniciar();
+
+
+async function iniciar() {
+  try {
+    await cargarLibros();
+  } catch (error) {
+    console.error(error);
+    root.innerHTML = `
+      <section class="ficha-error">
+        <h1>No pudimos cargar el libro</h1>
+        <p>Hubo un problema al conectar con la base de datos. Probá recargar la página.</p>
+        <a href="catalogo.html" class="btn btn--primary">Volver al catálogo</a>
+      </section>
+    `;
+    return;
+  }
+
+  libro = libros.find(l => l.id === id);
+
+  if (!libro) {
+    root.innerHTML = `
+      <section class="ficha-error">
+        <h1>No encontramos ese libro</h1>
+        <p>Puede que el enlace esté roto o el libro ya no exista en el catálogo.</p>
+        <a href="catalogo.html" class="btn btn--primary">Volver al catálogo</a>
+      </section>
+    `;
+  } else {
+    document.title = `${libro.titulo} | EntreLibros`;
+    cargarFicha();
+  }
 }
 
-// Pide las reseñas del libro a la base de datos y dibuja la ficha
+
 async function cargarFicha() {
   let calificaciones = [];
   let errorCarga = false;
@@ -39,19 +60,22 @@ function hoyISO() {
 }
 
 function htmlResenaCard(r) {
+  const urlPerfil = `perfil.html?id=${r.usuario_id}`;
   return `
-    <a class="resena-card" href="resena.html?id=${r.id}">
+    <article class="resena-card" data-href="resena.html?id=${r.id}" role="link" tabindex="0">
       <div class="resena-card__cabecera">
-        <span class="avatar">${escapar(r.usuario.charAt(0).toUpperCase())}</span>
+        <a class="usuario-link" href="${urlPerfil}" tabindex="-1" aria-hidden="true">
+          <span class="avatar">${escapar(r.usuario.charAt(0).toUpperCase())}</span>
+        </a>
         <div class="resena-card__quien">
-          <strong>${escapar(r.usuario)}</strong>
+          <a class="resena-card__nombre" href="${urlPerfil}">${escapar(r.usuario)}</a>
           <span class="resena-card__estrellas">${textoEstrellas(r.puntuacion)}</span>
         </div>
         <span class="resena-card__fecha">${escapar(formatearRango(r))}</span>
       </div>
       <p class="resena-card__texto">${escapar(r.comentario)}</p>
       <span class="resena-card__pie">${r.le_gusta ? "♥" : "♡"} ${r.likes}</span>
-    </a>`;
+    </article>`;
 }
 
 function renderFicha(calificaciones, errorCarga) {
@@ -79,7 +103,7 @@ function renderFicha(calificaciones, errorCarga) {
 
   const etiquetasHTML = distribucion.map(({ valor }) => `<span>${valor}</span>`).join("");
 
-  // El servidor las manda de la más nueva a la más vieja; acá solo las que tienen texto
+ 
   const conTexto = calificaciones.filter(r => r.comentario);
 
   let listaResenas;
@@ -254,6 +278,20 @@ function inicializarRatingPicker() {
 
 function conectarAcciones() {
   const usuario = obtenerUsuarioActual();
+
+ 
+  const listaResenas = document.querySelector(".resenas__lista");
+  listaResenas.addEventListener("click", e => {
+    if (e.target.closest("a")) return;
+    const tarjeta = e.target.closest("[data-href]");
+    if (tarjeta) location.href = tarjeta.dataset.href;
+  });
+  listaResenas.addEventListener("keydown", e => {
+    if (e.key === "Enter" && e.target.matches("[data-href]")) {
+      location.href = e.target.dataset.href;
+    }
+  });
+
   const btnLike = document.getElementById("btn-like");
   const btnWatchlist = document.getElementById("btn-watchlist");
   const btnLog = document.getElementById("btn-log");

@@ -5,7 +5,16 @@ const MESES = ["enero", "febrero", "marzo", "abril", "mayo", "junio",
 
 let datos = { resenas: [], unicos: [], likeadas: [] };
 
-/* ---------- Utilidades ---------- */
+
+const idPerfilPublico = Number(new URLSearchParams(location.search).get("id")) || 0;
+let modoPublico = false;
+
+
+function texto(propio, publico) {
+  return modoPublico ? publico : propio;
+}
+
+
 
 function escapar(texto) {
   const div = document.createElement("div");
@@ -21,7 +30,7 @@ function estrellas(puntuacion) {
   return "★".repeat(Math.floor(puntuacion)) + (puntuacion % 1 ? "½" : "");
 }
 
-// "ts" es el momento en que se guardó la reseña (lo manda el servidor)
+
 function marcaTiempo(r) {
   return r.ts;
 }
@@ -29,8 +38,6 @@ function marcaTiempo(r) {
 function vacio(texto) {
   return `<p class="perfil-vacio">${texto}</p>`;
 }
-
-/* ---------- Datos ---------- */
 
 function obtenerFavoritos() {
   return JSON.parse(localStorage.getItem(`favoritos_${usuario}`)) || [];
@@ -40,14 +47,14 @@ function guardarFavoritos(ids) {
   localStorage.setItem(`favoritos_${usuario}`, JSON.stringify(ids));
 }
 
-// El servidor manda el id del libro; acá le sumamos los datos del libro (título, portada...)
+
 function conLibros(lista) {
   return lista
     .map(r => ({ ...r, libro: libros.find(l => l.id === r.libro) }))
     .filter(r => r.libro);
 }
 
-// Una entrada por libro: la reseña más reciente de cada uno
+
 function ultimaResenaPorLibro(resenas) {
   const vistos = new Set();
   return resenas.filter(r => {
@@ -61,7 +68,7 @@ function librosDeIds(ids) {
   return ids.map(id => libros.find(l => l.id === id)).filter(Boolean);
 }
 
-/* ---------- HTML reutilizable ---------- */
+
 
 function htmlPoster(libro, pie = "") {
   return `
@@ -75,7 +82,7 @@ function pieEstrellas(r) {
   return `<span class="poster__pie">${estrellas(r.puntuacion)}${r.comentario ? ' <i class="poster__resena">≡</i>' : ""}</span>`;
 }
 
-// modo: "diario" (fechas + ≡), "resena" (con extracto) o "like" (con autor)
+
 function htmlFilaResena(r, modo) {
   const href = r.comentario
     ? `resena.html?id=${r.id}`
@@ -101,10 +108,13 @@ function htmlFilaResena(r, modo) {
     </a>`;
 }
 
-/* ---------- Render del perfil ---------- */
 
 function renderFavoritos() {
   const seccion = document.getElementById("seccion-favoritos");
+  if (modoPublico) {
+    seccion.hidden = true;
+    return;
+  }
   const favs = librosDeIds(obtenerFavoritos());
 
   if (favs.length === 0) {
@@ -132,7 +142,7 @@ function renderRatings() {
 
   if (calificados.length === 0) {
     total.textContent = "";
-    cont.innerHTML = vacio("Todavía no calificaste ningún libro.");
+    cont.innerHTML = vacio(texto("Todavía no calificaste ningún libro.", "Todavía no calificó ningún libro."));
     return;
   }
 
@@ -169,10 +179,15 @@ function renderStats() {
   const filas = [
     ["libros", "Libros", datos.unicos.length],
     ["anio", "Este año", esteAnio],
-    ["resenas", "Reseñas", datos.resenas.filter(r => r.comentario).length],
-    ["listas", "Listas", 0],
-    ["likes", "Likes", obtenerLikes(usuario).length + datos.likeadas.length]
+    ["resenas", "Reseñas", datos.resenas.filter(r => r.comentario).length]
   ];
+
+  if (!modoPublico) {
+    filas.push(
+      ["listas", "Listas", 0],
+      ["likes", "Likes", obtenerLikes(usuario).length + datos.likeadas.length]
+    );
+  }
 
   document.getElementById("perfil-stats").innerHTML = filas.map(([clave, etiqueta, valor]) => `
     <button type="button" class="stats-fila" data-vista="${clave}">
@@ -181,16 +196,15 @@ function renderStats() {
     </button>`).join("");
 }
 
-/* ---------- Render de las otras pestañas ---------- */
 
 function renderDiario() {
   const cont = document.getElementById("perfil-diario");
   if (datos.resenas.length === 0) {
-    cont.innerHTML = vacio("Tu diario está vacío.");
+    cont.innerHTML = vacio(texto("Tu diario está vacío.", "Su diario está vacío."));
     return;
   }
 
-  // El diario ordena y agrupa por la fecha en que leíste el libro
+
   const ordenadas = [...datos.resenas].sort((a, b) => fechaLectura(b) - fechaLectura(a));
 
   let mesActual = "";
@@ -207,17 +221,18 @@ function renderResenas() {
   const conTexto = datos.resenas.filter(r => r.comentario);
   document.getElementById("perfil-resenas").innerHTML = conTexto.length
     ? conTexto.map(r => htmlFilaResena(r, "resena")).join("")
-    : vacio("Todavía no escribiste reseñas.");
+    : vacio(texto("Todavía no escribiste reseñas.", "Todavía no escribió reseñas."));
 }
 
 function renderWatchlist() {
+  if (modoPublico) return;
   const lista = librosDeIds(obtenerWatchlist(usuario)).reverse();
   document.getElementById("perfil-watchlist").innerHTML = lista.length
     ? lista.map(l => htmlPoster(l)).join("")
     : vacio("Tu watchlist está vacía.");
 }
 
-// Dibuja todo con lo que hay en "datos" (no pide nada al servidor)
+
 function renderTodo() {
   renderFavoritos();
   renderActividad();
@@ -228,12 +243,19 @@ function renderTodo() {
   renderWatchlist();
 }
 
-// Pide a la base de datos tus reseñas y las que le diste like, y después dibuja
+
 async function cargarTodo() {
   try {
-    const [mias, likeadas] = await Promise.all([obtenerMisResenas(), obtenerResenasLikeadas()]);
-    const resenas = conLibros(mias);
-    datos = { resenas, unicos: ultimaResenaPorLibro(resenas), likeadas: conLibros(likeadas) };
+    await cargarLibros();
+
+    if (modoPublico) {
+      const resenas = conLibros(await obtenerResenasUsuario(idPerfilPublico));
+      datos = { resenas, unicos: ultimaResenaPorLibro(resenas), likeadas: [] };
+    } else {
+      const [mias, likeadas] = await Promise.all([obtenerMisResenas(), obtenerResenasLikeadas()]);
+      const resenas = conLibros(mias);
+      datos = { resenas, unicos: ultimaResenaPorLibro(resenas), likeadas: conLibros(likeadas) };
+    }
   } catch (error) {
     manejarError(error);
     if (error.sinSesion) return;
@@ -241,7 +263,7 @@ async function cargarTodo() {
   renderTodo();
 }
 
-/* ---------- Pestañas y vistas ---------- */
+
 
 function mostrarPanel(nombre) {
   document.querySelectorAll(".perfil-panel").forEach(p =>
@@ -409,10 +431,46 @@ function iniciarEdicion() {
   });
 }
 
-/* ---------- Inicio ---------- */
+
+async function iniciarPerfilPublico() {
+  let perfil;
+  try {
+    perfil = await obtenerUsuario(idPerfilPublico);
+  } catch (error) {
+    document.getElementById("perfil-nombre").textContent = "Usuario no encontrado";
+    document.getElementById("btn-editar-perfil").style.display = "none";
+    document.querySelector(".perfil-tabs").style.display = "none";
+    document.getElementById("panel-perfil").innerHTML =
+      vacio("No encontramos a ese usuario.") +
+      `<a class="btn btn--primary" href="catalogo.html">Volver al catálogo</a>`;
+    return;
+  }
+
+ 
+  if (perfil.es_mio) {
+    location.replace("perfil.html");
+    return;
+  }
+
+  modoPublico = true;
+  document.title = `${perfil.nombre} | EntreLibros`;
+  document.getElementById("perfil-nombre").textContent = perfil.nombre;
+  document.getElementById("perfil-avatar").textContent = perfil.nombre.charAt(0).toUpperCase();
+  document.getElementById("btn-editar-perfil").style.display = "none";
+  document.querySelector('.perfil-tab[data-tab="watchlist"]').style.display = "none";
+
+  cargarTodo();
+}
+
+
 
 document.addEventListener("DOMContentLoaded", () => {
   iniciarNavegacion();
+
+  if (idPerfilPublico) {
+    iniciarPerfilPublico();
+    return;
+  }
 
   if (!usuario) {
     document.getElementById("perfil-nombre").textContent = "Iniciá sesión";
@@ -427,6 +485,8 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("perfil-nombre").textContent = usuario;
   document.getElementById("perfil-avatar").textContent = usuario.charAt(0).toUpperCase();
 
+  cargarLibros().catch(error => console.error(error));
   iniciarEdicion();
   cargarTodo();
 });
+

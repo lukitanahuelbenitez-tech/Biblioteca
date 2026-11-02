@@ -1,5 +1,3 @@
-/* ---------- Utilidades compartidas ---------- */
-
 function escapar(texto) {
   const div = document.createElement("div");
   div.textContent = texto;
@@ -10,9 +8,7 @@ function textoEstrellas(puntuacion) {
   return "★".repeat(Math.floor(puntuacion)) + (puntuacion % 1 ? "½" : "");
 }
 
-/* ---------- Comunicación con el servidor ---------- */
 
-// Hace el pedido y devuelve el JSON. Si el servidor responde con error, lanza una excepción.
 async function pedir(ruta, datos = null) {
   const opciones = datos ? { method: "POST", body: new URLSearchParams(datos) } : {};
   const respuesta = await fetch(ruta, opciones);
@@ -61,8 +57,24 @@ async function obtenerResenasLikeadas() {
   return (await pedir("resenas_obtener.php?likeadas=1")).resenas;
 }
 
+
 async function obtenerPromedios() {
-  return (await pedir("resenas_promedios.php")).libros;
+  return (await pedir("resenas_promedio.php")).libros;
+}
+
+
+async function obtenerResenasUsuario(id) {
+  return (await pedir(`resenas_obtener.php?usuario=${id}`)).resenas;
+}
+
+
+function obtenerUsuario(id) {
+  return pedir(`usuario_obtener.php?id=${id}`);
+}
+
+
+async function buscarUsuarios(texto) {
+  return (await pedir(`usuarios_buscar.php?q=${encodeURIComponent(texto)}`)).usuarios;
 }
 
 
@@ -76,7 +88,7 @@ function guardarResena(idLibro, puntuacion, comentario, inicio, fin) {
   });
 }
 
-// Devuelve { le_gusta, likes }
+
 function alternarLikeResena(id) {
   return pedir("resena_like.php", { id });
 }
@@ -101,7 +113,7 @@ function calcularDistribucion(lista) {
   return distribucion;
 }
 
-/* ---------- Fechas de lectura ---------- */
+
 
 const MESES_CORTOS = ["Ene", "Feb", "Mar", "Abr", "May", "Jun",
                       "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
@@ -128,14 +140,14 @@ function formatearRango(r) {
   return new Date(r.ts).toLocaleDateString("es-AR");
 }
 
-// Fecha que usa el diario para ordenar y agrupar por mes
+
 function fechaLectura(r) {
   const iso = r.fin || r.inicio;
   if (iso) return new Date(`${iso}T12:00:00`).getTime();
   return r.ts;
 }
 
-/* ---------- Likes de libros y watchlist ---------- */
+
 
 function obtenerLista(clave, usuario) {
   return JSON.parse(localStorage.getItem(`${clave}_${usuario}`)) || [];
@@ -157,4 +169,5 @@ function alternarLike(usuario, idLibro) { return alternarEnLista("likes", usuari
 function obtenerWatchlist(usuario) { return obtenerLista("watchlist", usuario); }
 function tieneWatchlist(usuario, idLibro) { return obtenerWatchlist(usuario).includes(idLibro); }
 function alternarWatchlist(usuario, idLibro) { return alternarEnLista("watchlist", usuario, idLibro); }
+
 

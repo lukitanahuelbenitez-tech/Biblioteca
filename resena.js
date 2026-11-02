@@ -7,7 +7,7 @@ cargarResena();
 async function cargarResena() {
   let resena = null;
   try {
-    resena = await obtenerResena(idDeLaResena);
+    [resena] = await Promise.all([obtenerResena(idDeLaResena), cargarLibros()]);
   } catch (error) {
     console.error(error);
   }
@@ -32,6 +32,7 @@ async function cargarResena() {
 function renderResena(resena, libro) {
   const usuarioActual = obtenerUsuarioActual();
   const urlLibro = `libro.html?id=${libro.id}`;
+  const urlPerfil = `perfil.html?id=${resena.usuario_id}`;
 
   raiz.innerHTML = `
     <a class="resena-pagina__volver" href="${urlLibro}">‹ ${escapar(libro.titulo)}</a>
@@ -43,8 +44,10 @@ function renderResena(resena, libro) {
         </a>
         <div>
           <p class="resena-completa__autor">
-            <span class="avatar">${escapar(resena.usuario.charAt(0).toUpperCase())}</span>
-            Reseña de <strong>${escapar(resena.usuario)}</strong>
+            <a class="usuario-link" href="${urlPerfil}" tabindex="-1" aria-hidden="true">
+              <span class="avatar">${escapar(resena.usuario.charAt(0).toUpperCase())}</span>
+            </a>
+            Reseña de <a class="usuario-link" href="${urlPerfil}"><strong>${escapar(resena.usuario)}</strong></a>
           </p>
           <h1><a href="${urlLibro}">${escapar(libro.titulo)}</a> <small>${libro.anio}</small></h1>
           <p class="resena-completa__estrellas">${textoEstrellas(resena.puntuacion)}</p>
@@ -80,3 +83,4 @@ function renderResena(resena, libro) {
     }
   });
 }
+
