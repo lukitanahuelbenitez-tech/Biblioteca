@@ -24,6 +24,13 @@
       <input type="search" id="buscar-catalogo" placeholder="Buscar por título, autor o género..." autocomplete="off">
     </div>
 
+    <button type="button" class="btn-modo-usuario" id="btn-modo-usuario" aria-pressed="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
+      Estoy buscando usuario
+    </button>
+
+    <div class="resultados usuarios-lista" id="usuarios-lista" hidden></div>
+
     <div class="catalogo-grid" id="catalogo-grid">
     </div>
   </section>
@@ -34,14 +41,20 @@
   <script>
     const grid = document.getElementById("catalogo-grid");
     const inputBuscar = document.getElementById("buscar-catalogo");
+    const btnModo = document.getElementById("btn-modo-usuario");
+    const listaUsuarios = document.getElementById("usuarios-lista");
+
+    let promedios = {};
+    let librosListos = false;
+    let modoUsuarios = false;
+    let temporizador = null;
+    let turnoBusqueda = 0;
 
     function normalizar(texto) {
       return texto.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     }
 
-
-    let promedios = {};
-
+    /* ---------- Libros (vienen de la tabla libros) ---------- */
 
     function renderCatalogo(lista) {
       if (lista.length === 0) {
@@ -52,13 +65,13 @@
       grid.innerHTML = lista.map(libro => `
         <a href="libro.html?id=${libro.id}" class="catalogo-card">
           <div class="catalogo-card__portada">
-            <img src="${libro.portada}" alt="Portada de ${libro.titulo}">
+            <img src="${escapar(libro.portada)}" alt="Portada de ${escapar(libro.titulo)}">
           </div>
           <div class="catalogo-card__info">
-            <h3>${libro.titulo}</h3>
-            <p class="catalogo-card__autor">${libro.autor}</p>
+            <h3>${escapar(libro.titulo)}</h3>
+            <p class="catalogo-card__autor">${escapar(libro.autor)}</p>
             <div class="catalogo-card__meta">
-              <span class="catalogo-card__genero">${libro.genero}</span>
+              <span class="catalogo-card__genero">${escapar(libro.genero)}</span>
               <span class="catalogo-card__estrellas">${promedios[libro.id] ? "★ " + promedios[libro.id].promedio.toFixed(1) : "Sin calificar"}</span>
           </div>
           </div>
@@ -66,21 +79,108 @@
       `).join("");
     }
 
-    inputBuscar.addEventListener("input", () => {
+    function filtrarLibros() {
+      if (!librosListos) return;
       const q = normalizar(inputBuscar.value.trim());
       renderCatalogo(libros.filter(l =>
         normalizar(`${l.titulo} ${l.autor} ${l.genero}`).includes(q)
       ));
+    }
+
+    /* ---------- Usuarios ---------- */
+
+    function renderUsuarios(lista, hayTexto) {
+      if (!hayTexto) {
+        listaUsuarios.innerHTML = `<p class="perfil-vacio">Escribí el nombre de un usuario para buscarlo.</p>`;
+        return;
+      }
+      if (lista.length === 0) {
+        listaUsuarios.innerHTML = `<p class="perfil-vacio">No encontramos usuarios con ese nombre.</p>`;
+        return;
+      }
+
+      listaUsuarios.innerHTML = lista.map(u => `
+        <a class="resultado resultado--usuario" href="perfil.html?id=${u.id}">
+          <span class="avatar">${escapar(u.nombre.charAt(0).toUpperCase())}</span>
+          <span><strong>${escapar(u.nombre)}</strong><small>${u.resenas} ${u.resenas === 1 ? "reseña" : "reseñas"}</small></span>
+        </a>
+      `).join("");
+    }
+
+    async function buscarEnUsuarios() {
+      const texto = inputBuscar.value.trim();
+      const turno = ++turnoBusqueda;
+
+      if (!texto) {
+        renderUsuarios([], false);
+        return;
+      }
+
+      try {
+        const lista = await buscarUsuarios(texto);
+        if (turno !== turnoBusqueda) return;
+        renderUsuarios(lista, true);
+      } catch (error) {
+        console.error(error);
+        if (turno !== turnoBusqueda) return;
+        listaUsuarios.innerHTML = `<p class="perfil-vacio">No pudimos buscar usuarios. Probá de nuevo.</p>`;
+      }
+    }
+
+    /* ---------- Barra de búsqueda y botón de modo ---------- */
+
+    inputBuscar.addEventListener("input", () => {
+      if (modoUsuarios) {
+        clearTimeout(temporizador);
+        temporizador = setTimeout(buscarEnUsuarios, 250);
+      } else {
+        filtrarLibros();
+      }
     });
 
-    renderCatalogo(libros);
-    obtenerPromedios()
-      .then(datos => {
-        promedios = datos;
-        inputBuscar.dispatchEvent(new Event("input"));
-      })
-      .catch(error => console.error(error));
+    btnModo.addEventListener("click", () => {
+      modoUsuarios = !modoUsuarios;
+      turnoBusqueda++;
+      clearTimeout(temporizador);
 
+      btnModo.classList.toggle("is-activo", modoUsuarios);
+      btnModo.setAttribute("aria-pressed", String(modoUsuarios));
+      inputBuscar.placeholder = modoUsuarios
+        ? "Buscar usuario por nombre..."
+        : "Buscar por título, autor o género...";
+      inputBuscar.value = "";
+      grid.hidden = modoUsuarios;
+      listaUsuarios.hidden = !modoUsuarios;
+
+      if (modoUsuarios) renderUsuarios([], false);
+      else filtrarLibros();
+
+      inputBuscar.focus();
+    });
+
+    /* ---------- Inicio ---------- */
+
+    async function iniciar() {
+      try {
+        await cargarLibros();
+      } catch (error) {
+        console.error(error);
+        grid.innerHTML = `<p class="perfil-vacio">No pudimos cargar los libros. Probá recargar la página.</p>`;
+        return;
+      }
+
+      librosListos = true;
+      filtrarLibros();
+
+      try {
+        promedios = await obtenerPromedios();
+        filtrarLibros();
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    iniciar();
   </script>
 <nav class="tabbar">
   <a href="index.html" class="tabbar__item ">
