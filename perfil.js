@@ -3,17 +3,16 @@ const usuario = obtenerUsuarioActual();
 const MESES = ["enero", "febrero", "marzo", "abril", "mayo", "junio",
                "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
 
-let datos = { resenas: [], unicos: [], likeadas: [] };
 
+let datos = { resenas: [], unicos: [], likeadas: [], likesLibros: [], watchlist: [] };
 
+// Si la página se abre con ?id=, se muestra el perfil público de ese usuario
 const idPerfilPublico = Number(new URLSearchParams(location.search).get("id")) || 0;
 let modoPublico = false;
-
 
 function texto(propio, publico) {
   return modoPublico ? publico : propio;
 }
-
 
 
 function escapar(texto) {
@@ -39,6 +38,8 @@ function vacio(texto) {
   return `<p class="perfil-vacio">${texto}</p>`;
 }
 
+
+
 function obtenerFavoritos() {
   return JSON.parse(localStorage.getItem(`favoritos_${usuario}`)) || [];
 }
@@ -53,7 +54,6 @@ function conLibros(lista) {
     .map(r => ({ ...r, libro: libros.find(l => l.id === r.libro) }))
     .filter(r => r.libro);
 }
-
 
 function ultimaResenaPorLibro(resenas) {
   const vistos = new Set();
@@ -81,7 +81,6 @@ function htmlPoster(libro, pie = "") {
 function pieEstrellas(r) {
   return `<span class="poster__pie">${estrellas(r.puntuacion)}${r.comentario ? ' <i class="poster__resena">≡</i>' : ""}</span>`;
 }
-
 
 function htmlFilaResena(r, modo) {
   const href = r.comentario
@@ -181,11 +180,11 @@ function renderStats() {
     ["anio", "Este año", esteAnio],
     ["resenas", "Reseñas", datos.resenas.filter(r => r.comentario).length]
   ];
-
+ 
   if (!modoPublico) {
     filas.push(
       ["listas", "Listas", 0],
-      ["likes", "Likes", obtenerLikes(usuario).length + datos.likeadas.length]
+      ["likes", "Likes", datos.likesLibros.length + datos.likeadas.length]
     );
   }
 
@@ -197,6 +196,7 @@ function renderStats() {
 }
 
 
+
 function renderDiario() {
   const cont = document.getElementById("perfil-diario");
   if (datos.resenas.length === 0) {
@@ -204,7 +204,7 @@ function renderDiario() {
     return;
   }
 
-
+  // El diario ordena y agrupa por la fecha en que leíste el libro
   const ordenadas = [...datos.resenas].sort((a, b) => fechaLectura(b) - fechaLectura(a));
 
   let mesActual = "";
@@ -226,7 +226,7 @@ function renderResenas() {
 
 function renderWatchlist() {
   if (modoPublico) return;
-  const lista = librosDeIds(obtenerWatchlist(usuario)).reverse();
+  const lista = librosDeIds(datos.watchlist).reverse();
   document.getElementById("perfil-watchlist").innerHTML = lista.length
     ? lista.map(l => htmlPoster(l)).join("")
     : vacio("Tu watchlist está vacía.");
@@ -250,11 +250,21 @@ async function cargarTodo() {
 
     if (modoPublico) {
       const resenas = conLibros(await obtenerResenasUsuario(idPerfilPublico));
-      datos = { resenas, unicos: ultimaResenaPorLibro(resenas), likeadas: [] };
+      datos = { resenas, unicos: ultimaResenaPorLibro(resenas), likeadas: [], likesLibros: [], watchlist: [] };
     } else {
-      const [mias, likeadas] = await Promise.all([obtenerMisResenas(), obtenerResenasLikeadas()]);
+      const [mias, likeadas, marcas] = await Promise.all([
+        obtenerMisResenas(),
+        obtenerResenasLikeadas(),
+        obtenerMarcas()
+      ]);
       const resenas = conLibros(mias);
-      datos = { resenas, unicos: ultimaResenaPorLibro(resenas), likeadas: conLibros(likeadas) };
+      datos = {
+        resenas,
+        unicos: ultimaResenaPorLibro(resenas),
+        likeadas: conLibros(likeadas),
+        likesLibros: marcas.likes,
+        watchlist: marcas.watchlist
+      };
     }
   } catch (error) {
     manejarError(error);
@@ -262,7 +272,6 @@ async function cargarTodo() {
   }
   renderTodo();
 }
-
 
 
 function mostrarPanel(nombre) {
@@ -288,7 +297,7 @@ function abrirVista(clave) {
       ? `<div class="grid-portadas">${lista.map(r => htmlPoster(r.libro, pieEstrellas(r))).join("")}</div>`
       : vacio("Todavía no hay libros acá.");
   } else if (clave === "likes") {
-    const libs = librosDeIds(obtenerLikes(usuario)).reverse();
+    const libs = librosDeIds(datos.likesLibros).reverse();
     const resLikes = datos.likeadas;
     titulo.textContent = "Likes";
 
@@ -330,7 +339,7 @@ function iniciarNavegacion() {
   document.getElementById("vista-volver").addEventListener("click", () => mostrarPanel("perfil"));
 }
 
-/* ---------- Editar perfil (favoritos con buscador) ---------- */
+
 
 let borrador = [];
 let slotActivo = null;
@@ -432,6 +441,7 @@ function iniciarEdicion() {
 }
 
 
+
 async function iniciarPerfilPublico() {
   let perfil;
   try {
@@ -446,7 +456,6 @@ async function iniciarPerfilPublico() {
     return;
   }
 
- 
   if (perfil.es_mio) {
     location.replace("perfil.html");
     return;
@@ -489,4 +498,5 @@ document.addEventListener("DOMContentLoaded", () => {
   iniciarEdicion();
   cargarTodo();
 });
+
 

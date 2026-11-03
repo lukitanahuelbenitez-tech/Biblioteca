@@ -41,6 +41,7 @@ async function iniciar() {
 async function cargarFicha() {
   let calificaciones = [];
   let errorCarga = false;
+  let marcas = { likes: [], watchlist: [] };
 
   try {
     calificaciones = await obtenerResenasLibro(libro.id);
@@ -49,7 +50,16 @@ async function cargarFicha() {
     errorCarga = true;
   }
 
-  renderFicha(calificaciones, errorCarga);
+
+  if (obtenerUsuarioActual()) {
+    try {
+      marcas = await obtenerMarcas();
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  renderFicha(calificaciones, errorCarga, marcas);
 }
 
 function hoyISO() {
@@ -78,10 +88,10 @@ function htmlResenaCard(r) {
     </article>`;
 }
 
-function renderFicha(calificaciones, errorCarga) {
+function renderFicha(calificaciones, errorCarga, marcas) {
   const usuarioActual = obtenerUsuarioActual();
-  const meGusta = usuarioActual ? tieneLike(usuarioActual, libro.id) : false;
-  const enWatchlist = usuarioActual ? tieneWatchlist(usuarioActual, libro.id) : false;
+  const meGusta = marcas.likes.includes(libro.id);
+  const enWatchlist = marcas.watchlist.includes(libro.id);
 
   const total = calificaciones.length;
   const promedio = calcularPromedio(calificaciones);
@@ -103,7 +113,7 @@ function renderFicha(calificaciones, errorCarga) {
 
   const etiquetasHTML = distribucion.map(({ valor }) => `<span>${valor}</span>`).join("");
 
- 
+
   const conTexto = calificaciones.filter(r => r.comentario);
 
   let listaResenas;
@@ -279,7 +289,6 @@ function inicializarRatingPicker() {
 function conectarAcciones() {
   const usuario = obtenerUsuarioActual();
 
- 
   const listaResenas = document.querySelector(".resenas__lista");
   listaResenas.addEventListener("click", e => {
     if (e.target.closest("a")) return;
@@ -296,25 +305,29 @@ function conectarAcciones() {
   const btnWatchlist = document.getElementById("btn-watchlist");
   const btnLog = document.getElementById("btn-log");
 
-  btnLike.addEventListener("click", () => {
+  
+  async function alternarBoton(boton, tipo, textoActivo, textoInactivo) {
     if (!usuario) {
       location.href = "login.html";
       return;
     }
-    const activo = alternarLike(usuario, libro.id);
-    btnLike.classList.toggle("is-activo", activo);
-    btnLike.textContent = activo ? "♥ Te gusta" : "♡ Me gusta";
-  });
+    boton.disabled = true;
+    try {
+      const { activo } = await alternarMarca(libro.id, tipo);
+      boton.classList.toggle("is-activo", activo);
+      boton.textContent = activo ? textoActivo : textoInactivo;
+    } catch (error) {
+      manejarError(error);
+    } finally {
+      boton.disabled = false;
+    }
+  }
 
-  btnWatchlist.addEventListener("click", () => {
-    if (!usuario) {
-      location.href = "login.html";
-      return;
-    }
-    const activo = alternarWatchlist(usuario, libro.id);
-    btnWatchlist.classList.toggle("is-activo", activo);
-    btnWatchlist.textContent = activo ? "✓ En tu watchlist" : "+ Watchlist";
-  });
+  btnLike.addEventListener("click", () =>
+    alternarBoton(btnLike, "like", "♥ Te gusta", "♡ Me gusta"));
+
+  btnWatchlist.addEventListener("click", () =>
+    alternarBoton(btnWatchlist, "watchlist", "✓ En tu watchlist", "+ Watchlist"));
 
   btnLog.addEventListener("click", () => {
     if (!usuario) {
