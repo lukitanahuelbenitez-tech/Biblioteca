@@ -8,6 +8,9 @@ if (isset($_GET["libro"])) {
 } elseif (isset($_GET["id"])) {
     $filtro = "WHERE r.id_resena = ?";
     $valor = (int) $_GET["id"];
+} elseif (isset($_GET["usuario"])) {
+    $filtro = "WHERE r.id_usuario = ?";
+    $valor = (int) $_GET["usuario"];
 } elseif (isset($_GET["mias"])) {
     $filtro = "WHERE r.id_usuario = ?";
     $valor = exigir_sesion();
@@ -20,6 +23,7 @@ if (isset($_GET["libro"])) {
 
 $sql = "SELECT r.id_resena AS id,
                r.id_libro AS libro,
+               u.id_usuario AS usuario_id,
                u.nombre AS usuario,
                r.puntuacion,
                r.comentario,
@@ -42,6 +46,7 @@ $filas = $consulta->get_result()->fetch_all(MYSQLI_ASSOC);
 foreach ($filas as &$f) {
     $f["id"] = (int) $f["id"];
     $f["libro"] = (int) $f["libro"];
+    $f["usuario_id"] = (int) $f["usuario_id"];
     $f["puntuacion"] = (float) $f["puntuacion"];
     $f["ts"] = (int) $f["ts"];
     $f["likes"] = (int) $f["likes"];
