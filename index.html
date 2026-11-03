@@ -25,35 +25,11 @@
     <h2 class="carrusel-titulo">Libros destacados</h2>
 
     <div class="carrusel">
-      <div class="carrusel__track">
-          <a class="libro-card" href="libro.html?id=1">
-          <img src="img/el principito.png" alt="Portada de El Principito">
-        </a>
-
-        <a class="libro-card" href="libro.html?id=2">
-          <img src="img/cienaños.png" alt="Portada de Cien años de soledad">
-        </a>
-
-        <a class="libro-card" href="libro.html?id=3">
-          <img src="img/harrypotter.png" alt="Portada de Harry Potter y la piedra filosofal">
-        </a>
-
-        <a class="libro-card" href="libro.html?id=4">
-          <img src="img/1984.png" alt="Portada de 1984">
-        </a>
-
-        <a class="libro-card" href="libro.html?id=5">
-          <img src="img/orgulloyprejuicio.png" alt="Portada de Orgullo y prejuicio">
-        </a>
+      <div class="carrusel__track" id="carrusel-track">
       </div>
     </div>
 
-    <div class="carrusel__nav">
-      <a href="#libro1" class="carrusel__dot" aria-label="Ir a El Principito"></a>
-      <a href="#libro2" class="carrusel__dot" aria-label="Ir a Cien años de soledad"></a>
-      <a href="#libro3" class="carrusel__dot" aria-label="Ir a Harry Potter"></a>
-      <a href="#libro4" class="carrusel__dot" aria-label="Ir a 1984"></a>
-      <a href="#libro5" class="carrusel__dot" aria-label="Ir a Orgullo y prejuicio"></a>
+    <div class="carrusel__nav" id="carrusel-nav">
     </div>
   </section>
 <nav class="tabbar">
@@ -70,6 +46,38 @@
     <span>Perfil</span>
   </a>
 </nav>
+<script src="libros.js"></script>
+<script src="resenas.js"></script>
 <script src="sesion.js"></script>
+<script>
+  const pista = document.getElementById("carrusel-track");
+  const puntos = document.getElementById("carrusel-nav");
+
+  // Los libros destacados salen de la tabla libros
+  cargarLibros()
+    .then(lista => {
+      const destacados = lista.slice(0, 8);
+
+      pista.innerHTML = destacados.map(l => `
+        <a class="libro-card" id="libro${l.id}" href="libro.html?id=${l.id}">
+          <img src="${escapar(l.portada)}" alt="Portada de ${escapar(l.titulo)}">
+        </a>`).join("");
+
+      puntos.innerHTML = destacados.map(l => `
+        <a href="#" class="carrusel__dot" data-libro="${l.id}" aria-label="Ir a ${escapar(l.titulo)}"></a>`).join("");
+
+      puntos.addEventListener("click", e => {
+        const punto = e.target.closest("[data-libro]");
+        if (!punto) return;
+        e.preventDefault();
+        const tarjeta = document.getElementById(`libro${punto.dataset.libro}`);
+        if (tarjeta) tarjeta.scrollIntoView({ behavior: "smooth", inline: "start", block: "nearest" });
+      });
+    })
+    .catch(error => {
+      console.error(error);
+      pista.innerHTML = `<p class="perfil-vacio">No pudimos cargar los libros. Probá recargar la página.</p>`;
+    });
+</script>
 </body>
 </html>
